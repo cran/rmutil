@@ -6,9 +6,7 @@ finterp(z, envir=sys.frame(sys.parent()), formula=FALSE,
 }
 \arguments{
 \item{z}{A model formula beginning with ~, either in Wilkinson and
-Rogers notation or containing unknown parameters. If it also has
-class, repeated, tccov, or tvcov, \code{envir} must be an object of
-one of these classes.}
+Rogers notation or containing unknown parameters.}
 \item{envir}{The environment in which the formula is to be
 interpreted or a data object of class, repeated, tccov, or tvcov.}
 \item{formula}{If TRUE and the formula is in Wilkinson and Rogers
@@ -34,8 +32,14 @@ unknown parameters or of a vector of them. Such language formulae can
 either be in Wilkinson and Rogers notation or be expressions
 containing both known (existing) covariates and unknown (not existing)
 parameters. In the latter, factor variables cannot be used and
-parameters must be scalars. The covariates in the formula are sought
-in the environment or in the data object provided.
+parameters must be scalars.
+
+The covariates in the formula are sought in the environment or in the
+data object provided. If the data object has class, repeated,
+\code{times} will use the response times as a covariate,
+\code{individuals} will use the index for individuals as a factor
+covariate, and \code{nesting} the index for nesting as a factor
+covariate.
 
 Note that, in parameter displays, formulae in Wilkinson and Rogers
 notation use variable names whereas those with unknowns use the names
@@ -48,7 +52,7 @@ vector of them is returned. Its attributes give the formula supplied,
 the model function produced, the covariate names, the parameter names,
 and the range of values of the index of the parameter vector. If
 \code{formula} is TRUE and a Wilkinson and Rogers formula was
-supplied, it is returned instead of a function.
+supplied, it is simply returned instead of creating a function.
 }
 \author{J.K. Lindsey}
 \seealso{
@@ -121,63 +125,82 @@ nlm(likefn3,p=log(c(1,0.4,0.1)))
 # envir as data objects
 y <- matrix(rnorm(20),ncol=5)
 y[3,3] <- y[2,2] <- NA
-x <- 1:4
+x1 <- 1:4
+x2 <- c("a","b","c","d")
 resp <- restovec(y)
-xx <- tcctomat(x)
+xx <- tcctomat(x1)
+xx2 <- tcctomat(data.frame(x1,x2))
 z1 <- matrix(rnorm(20),ncol=5)
 z2 <- matrix(rnorm(20),ncol=5)
 z3 <- matrix(rnorm(20),ncol=5)
 zz <- tvctomat(z1)
 zz <- tvctomat(z2,old=zz)
 reps <- rmna(resp, ccov=xx, tvcov=zz)
-rm(y, x, z1, z2)
+reps2 <- rmna(resp, ccov=xx2, tvcov=zz)
+rm(y, x1, x2 , z1, z2)
 #
 # repeated objects
-# Wilkinson and Rogers notation
-form1 <- ~x+z2
-class(form1) <- c(class(form1),"repeated")
-print(fn1 <- finterp(form1, envir=reps))
-fn1(2:4)
-# with unknown parameters
-form2 <- ~a+b*x+d*z2
-class(form2) <- c(class(form2),"repeated")
-print(fn2 <- finterp(form2, envir=reps))
-fn2(2:4)
 #
 # time-constant covariates
 # Wilkinson and Rogers notation
-form3 <- ~x
-class(form3) <- c(class(form3),"tccov")
-print(fn3 <- finterp(form3, envir=reps))
-fn3(2:3)
-print(fn3a <- finterp(form3, envir=xx))
-fn3a(2:3)
+form1 <- ~x1
+print(fn1 <- finterp(form1, envir=reps))
+fn1(2:3)
+print(fn1a <- finterp(form1, envir=xx))
+fn1a(2:3)
+form1b <- ~x1+x2
+print(fn1b <- finterp(form1b, envir=reps2))
+fn1b(2:6)
+print(fn1c <- finterp(form1b, envir=xx2))
+fn1c(2:6)
 # with unknown parameters
-form4 <- ~a+b*x
-class(form4) <- c(class(form4),"tccov")
-print(fn4 <- finterp(form4, envir=reps))
-fn4(2:3)
-print(fn4a <- finterp(form4, envir=xx))
-fn4a(2:3)
+form2 <- ~a+b*x1
+print(fn2 <- finterp(form2, envir=reps))
+fn2(2:3)
+print(fn2a <- finterp(form2, envir=xx))
+fn2a(2:3)
 #
 # time-varying covariates
 # Wilkinson and Rogers notation
-form5 <- ~z1+z2
-class(form5) <- c(class(form5),"tvcov")
+form3 <- ~z1+z2
+print(fn3 <- finterp(form3, envir=reps))
+fn3(2:4)
+print(fn3a <- finterp(form3, envir=zz))
+fn3a(2:4)
+# with unknown parameters
+form4 <- ~a+b*z1+d*z2
+print(fn4 <- finterp(form4, envir=reps))
+fn4(2:4)
+print(fn4a <- finterp(form4, envir=zz))
+fn4a(2:4)
+#
+# note: lengths of x1 and z2 differ
+# Wilkinson and Rogers notation
+form5 <- ~x1+z2
 print(fn5 <- finterp(form5, envir=reps))
 fn5(2:4)
-print(fn5a <- finterp(form5, envir=zz))
-fn5a(2:4)
 # with unknown parameters
-form6 <- ~a+b*z1+d*z2
-class(form6) <- c(class(form6),"tvcov")
+form6 <- ~a+b*x1+d*z2
 print(fn6 <- finterp(form6, envir=reps))
 fn6(2:4)
-print(fn6a <- finterp(form6, envir=zz))
-fn6a(2:4)
-# with a variable not in the data object
-form7 <- ~a+b*z1+d*z2+e*z3
-class(form7) <- c(class(form7),"tvcov")
+#
+# with times
+# Wilkinson and Rogers notation
+form7 <- ~x1+z2+times
 print(fn7 <- finterp(form7, envir=reps))
 fn7(2:5)
+form7a <- ~x1+x2+z2+times
+print(fn7a <- finterp(form7a, envir=reps2))
+fn7a(2:8)
+# with unknown parameters
+form8 <- ~a+b*x1+d*z2+e*times
+print(fn8 <- finterp(form8, envir=reps))
+fn8(2:5)
+#
+# with a variable not in the data object
+form9 <- ~a+b*z1+d*z2+e*z3
+print(fn9 <- finterp(form9, envir=reps))
+fn9(2:5)
+# z3 assumed to be an unknown parameter:
+fn9(2:6)
 }

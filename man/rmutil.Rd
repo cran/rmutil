@@ -49,6 +49,8 @@
 
 \code{\link{int}}			Numerical Integration
 
+\code{\link{iprofile}}	Produce Individual Time Profiles for Plotting
+
 \code{\link{mexp}}			Matrix Exponentiation
 
 \code{\link{pbetabinom}}		Distribution Function of Beta Binomial Distribution
@@ -83,10 +85,6 @@
 
 \code{\link{plevy}}			Distribution Function of Levy Distribution
 
-\code{\link{plot.iprofile}}	Plot Individual Time Profiles for Carma
-
-\code{\link{plot.profile}}		Plot Marginal Time Profiles for Carma
-
 \code{\link{plot.residuals}}	Plot Residuals for Carma
 
 \code{\link{pmultbinom}}		Distribution Function of Multiplicative Binomial Distribution
@@ -96,6 +94,8 @@
 \code{\link{ppareto}}			Distribution Function of Pareto Distribution
 
 \code{\link{ppowexp}}			Distribution Function of Power Exponential Distribution
+
+\code{\link{profile}}		Produce Marginal Time Profiles for Plotting
 
 \code{\link{read.list}}		Read a List of Matrices of Unbalanced Repeated Measurements from a File
 

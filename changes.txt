@@ -1,3 +1,91 @@
+------------------------------------------------------------------------------
+version 0.5
+------------------------------------------------------------------------------
+29.6.99
+plot.response: remove NAs when calculating default ylim
+28.6.99
+gnlr.r, gnlr3.r, fmr.r, nordr.r, gnlmm.r: check if user gives a
+	nonlinear formula in linear argument and correctly handle it
+27.6.99
+finterp: corrected error message when non-numeric vector supplied
+restovec: corrected printing of total times when negative times present
+added transform methods for response, tccov, and tvcov objects
+24.6.99
+gar.r: corrected error in printing shape functions
+22.6.99
+binnest.f: modified to compile with g77
+8.6.99
+binnest: binary random effects model with two levels of nesting
+7.6.99
+restovec: added an additional check for nest variable in lists
+6.6.99
+logitord.f: corrected bug in calculation of Hessian (and s.e.)
+1.6.99
+elliptic: added multivariate Student t distribution
+11.5.99
+finterp.r: functions allowed in W&R formulae
+carma.r, elliptic.r, kalseries.r, kalcount.r, kalsurv.r: allow factor variables
+finterp: can locate and use indices for individuals and nesting as
+	factor covariates
+10.5.99
+tcctomat.r, tvctomat.r: allow factor variables
+finterp, fnenvir: changed to check for factor variables
+6.5.99
+elliptic.r: allow variance to be a function of the mean function
+4.5.99
+gar.c: changed shape parameter from sd to variance
+3.5.99
+profile and iprofile: fixed to plot correctly with nesting
+1.5.99
+tcctomat, tvctomat: allow dataframes
+28.4.99
+tvctomat: time-varying covariates can be factors
+elliptic.r, gnlr.r, gnlr3.r, fmr.r, gnlmm.r, gar.r: location and shape
+	functions can have common parameters
+26.4.99
+restovec: weights allowed for lists
+finterp, fnenvir: can find the times when envir is a repeated object
+gar.r: allow shape to be a function of the location function
+23.4.99
+gnlr.r, gnlr3.r, fmr.r, nordr.r, nlr.r, elliptic.r, gnlmm.r, gar.r,
+	kalseries.r, kalcount.r, kalsurv.r, ehr.r: do not require
+	envir if response has class, repeated
+corrected bugs in restovec and plot.response (Lorenz Gygax)
+22.4.99
+generalized plot.residuals
+tvctomat: allow calculation of more than one interaction with
+	time-constant covariates at a time
+finterp and fnenvir: allow variables in environment to have same name
+	as a function
+21.4.99
+correction of 18.1.99 by Brian Ripley wrong: dist.c put back in gnlm
+20.4.99
+ksurvb.c: corrected bug when time-varying covariates
+elliptic.r: added option to ccov and tvcov to give covariate names
+	when response has class, repeated
+carma.r: added option to ccov to give covariate names when response
+	has class, repeated
+19.4.99
+changed plot.profile to profile and plot.iprofile to iprofile
+18.4.99
+elliptic.r: added recursive predicted values when AR(1) and/or random effect
+16.4.99
+gnlr.r, gnlr3.r, fmr.r, nordr.r, gnlmm.r, ehr.r: changed order of
+	parameters when function with linear part
+15.9.99
+ehr: corrected two errors when lambda function with linear part
+nordr.r: n changed to nrows
+13.4.99
+carma.r: corrected predicted values when response is transformed
+gar.r, kalseries.r: changed handling of transformed responses
+------------------------------------------------------------------------------
+version 0.4
+------------------------------------------------------------------------------
+12.4.99
+added dependency on rmutil to DESCRIPTION
+11.4.99
+elliptic.f: corrected handling of dose for PKPD model when
+	    time-varying covariates are present
 6.4.99
 elliptic.r, gnlmm.r, gar.r, kalseries.r, kalcount.r, kalsurv.r, ehr.r,
 	 nordr.r, nlr.r: modified to use fnenvir
@@ -45,6 +133,7 @@ kalsurv.r: prints out "birth process" when applicable instead of
 logitord.r: removed DUP=F from Fortran call
 8.2.99
 km.r: fixed bug in plot.dist.km when several groups are plotted
+	(Gareth Ridall)
 7.2.99
 improved handling of variable names in tcctomat, tvctomat, and
 	functions calling them
@@ -52,7 +141,7 @@ rmaov.r: split-plot aov from Ralf Goertz
 6.2.99
 glmm.r: accepts transformed data if dataframe supplied
 5.2.99
-km.r: fixed bug for double lines with censored observations
+km.r: fixed bug for double lines with censored observations (Gareth Ridall)
 ehr.r: modified handling of language
 4.2.99
 km.r: added print.km to remove attributes
@@ -105,6 +194,8 @@ gnlr.r, gnlr3.r, fmr.r, gnlmm.r: removed -delta/2 in right censoring
 dist.r, gnlr3.r, gar.c, hidden.f: changed parametrization of Burr to
 	agree with kalsurv.r
 elliptic.r: use var(y) to get initial estimate of variance
+------------------------------------------------------------------------------
+version 0.3
 ------------------------------------------------------------------------------
 14.1.99
 kalsurv.r: corrected printing of number of subjects and observations
@@ -159,6 +250,8 @@ hidden: added multinomial distribution
 hidden.f: corrected Poisson and binomial calculations
 5.11.98
 carmasub.f and survkit.f: changes for compatibility with g77
+------------------------------------------------------------------------------
+version 0.2
 ------------------------------------------------------------------------------
 2.11.98
 ehr.r: corrected printing coefficients with linear and other parameters
@@ -274,3 +367,5 @@ moved integer declarations to the beginning in carmasub.f,
       elliptic.f, gettvc.f, survkit.f so that g77 should work
 5.9.98
 gar.r Corrected predictions for transformed responses
+------------------------------------------------------------------------------
+version 0.1

@@ -22,6 +22,7 @@ fnenvir		Check Covariates and Parameters of a Function
 gauss.hermite	Calculate Gauss-Hermite Quadrature Points
 gettvc		Create Time-varying Covariates
 int		Numerical Integration
+iprofile	Produce Individual Time Profiles for Plotting
 mexp		Matrix Exponentiation
 pbetabinom	Distribution Function of Beta Binomial Distribution
 pboxcox		Distribution Function of Box-Cox Distribution
@@ -39,13 +40,12 @@ pinvgauss	Distribution Function of Inverse Gaussian Distribution
 pkpd		Pharmacokinetic Model Functions
 plaplace	Distribution Function of Laplace Distribution
 plevy		Distribution Function of Levy Distribution
-plot.iprofile	Plot Individual Time Profiles for contkal and kalcount
-plot.profile	Plot Marginal Time Profiles for contkal and kalcount
 plot.residuals	Plot Residuals for contkal and kalcount
 pmultbinom	Distribution Function of Multiplicative Binomial Distribution
 pmultpois	Distribution Function of Multiplicative Poisson Distribution
 ppareto		Distribution Function of Pareto Distribution
 ppowexp		Distribution Function of Power Exponential Distribution
+profile		Produce Marginal Time Profiles for Plotting
 read.list	Read a List of Matrices of Unbalanced Repeated Measurements from a File
 read.surv	Read a List of Vectors of Event Histories from a File
 restovec	Create a Response Object

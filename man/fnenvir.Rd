@@ -18,8 +18,11 @@ repeated.}
 }
 \description{
 \code{fnenvir} finds the covariates and parameters in a function and
-may modify it so that the covariates used in it are found in the data
+can modify it so that the covariates used in it are found in the data
 object specified by \code{envir}.
+
+If the data object has class, repeated, \code{times} will use the
+response times as a covariate.
 }
 \value{
 The (modified) function, of class formulafn, is returned with its
@@ -53,28 +56,29 @@ rm(y, x, z1, z2)
 #
 # repeated objects
 func1 <- function(p) p[1]+p[2]*x+p[3]*z2
-class(func1) <- "repeated"
 print(fn1 <- fnenvir(func1, envir=reps))
 fn1(2:4)
 #
 # time-constant covariates
 func2 <- function(p) p[1]+p[2]*x
-class(func2) <- "tccov"
 print(fn2 <- fnenvir(func2, envir=reps))
 fn2(2:3)
 print(fn2a <- fnenvir(func2, envir=xx))
 fn2a(2:3)
 #
+# time-varying covariates
 func3 <- function(p) p[1]+p[2]*z1+p[3]*z2
-class(func3) <- "tvcov"
 print(fn3 <- fnenvir(func3, envir=reps))
 fn3(2:4)
 print(fn3a <- fnenvir(func3, envir=zz))
 fn3a(2:4)
+# including times
+func3b <- function(p) p[1]+p[2]*z1+p[3]*z2+p[4]*times
+print(fn3b <- fnenvir(func3b, envir=reps))
+fn3b(2:5)
 #
 # with typing error and a variable not in the data object
 func4 <- function(p) p[1]+p2[2]*z1+p[3]*z2+p[4]*z3
-class(func4) <- "tvcov"
 print(fn4 <- fnenvir(func4, envir=reps))
 #
 # first-order one-compartment model
@@ -101,7 +105,6 @@ conc[,2:20] <- conc[,2:20]+0.5*(conc[,1:19]-matrix(mu(log(c(1,0.3,0.2))),
 conc <- restovec(ifelse(conc>0,conc,0.01))
 reps <- rmna(conc, ccov=dd, tvcov=tt)
 #
-class(mu) <- "repeated"
 print(fn5 <- fnenvir(mu,envir=reps))
 fn5(c(0,-1.2,-1.6))
 }

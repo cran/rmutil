@@ -1,35 +1,43 @@
-\name{plot.profile}
-\title{Plot Marginal Time Profiles}
+\name{profile}
+\title{Produce Marginal Time Profiles for Plotting}
 \usage{
-plot.profile(z, times=NULL, nind=1, mu=NULL, add=FALSE, ylim=NULL,
+plot(profile(z, times=NULL, mu=NULL, ccov, plotse=F), nind=1,
+	intensity=F, add=FALSE, ylim=c(min(z$pred),max(z$pred)),
 	lty=NULL, ylab="Fitted value", xlab="Time", ...)
 }
-\alias{plot.profile}
 \arguments{
 \item{z}{An object of class recursive, from \code{\link{carma}},
-\code{\link{gar}}, \code{\link{kalcount}}, \code{\link{kalseries}},
-\code{\link{kalsurv}}, or \code{\link{nbkal}}.}
+\code{\link{elliptic}}, \code{\link{gar}}, \code{\link{kalcount}},
+\code{\link{kalseries}}, \code{\link{kalsurv}}, or \code{\link{nbkal}}.}
 \item{times}{Vector of time points at which profiles are to be plotted.}
-\item{nind}{Observation number(s) of individual(s) to be plotted.}
 \item{mu}{The location regression as a function of the parameters and
 the times, for the desired covariate values.}
+\item{ccov}{Covariate values for the profiles (\code{\link{carma}}
+only).}
+\item{plotse}{Plot standard errors (\code{\link{carma}} only).}
+\item{nind}{Observation number(s) of individual(s) to be plotted. (Not
+used if \code{mu} is supplied.)}
+\item{intensity}{If z has class, \code{kalsurv}, and this is TRUE, the
+intensity is plotted instead of the time between events.}
 \item{add}{If TRUE, add contour to previous plot instead of creating a
 new one.}
 \item{others}{Plotting control options.}
 }
 \value{
-\code{plot.profile} is used for plotting marginal profiles over time
+\code{profile} is used for plotting marginal profiles over time
 for models obtained from Kalman fitting, for given fixed values of
-covariates. See \code{\link{plot.iprofile}} for plotting individual
+covariates. See \code{\link{iprofile}} for plotting individual
 profiles.
 }
 \author{J.K. Lindsey}
 \seealso{
-\code{\link{carma}}, \code{\link{gar}}, \code{\link{kalcount}},
-\code{\link{kalseries}}, \code{\link{kalsurv}}, \code{\link{nbkal}}
-\code{\link{plot.iprofile}}, \code{\link{plot.residuals}}.
+\code{\link{carma}}, \code{\link{elliptic}}, \code{\link{gar}},
+\code{\link{kalcount}}, \code{\link{kalseries}},
+\code{\link{kalsurv}}, \code{\link{nbkal}} \code{\link{iprofile}},
+\code{\link{plot.residuals}}.
 }
 \examples{
+library(repeated)
 times <- rep(1:20,2)
 dose <- c(rep(2,20),rep(5,20))
 mu <- function(p) exp(p[1]-p[3])*(dose/(exp(p[1])-exp(p[2]))*
@@ -42,6 +50,6 @@ conc <- ifelse(conc>0,conc,0.01)
 z <- gar(conc, dist="gamma", times=1:20, mu=mu, shape=shape,
 	preg=log(c(1,0.4,0.1)), pdepend=0.5, pshape=log(c(1,0.2)))
 # plot individual profiles and the average profile
-plot.iprofile(z, nind=1:2, pch=c(1,20), lty=3:4)
-plot.profile(z, nind=1:2, lty=1:2, add=T)
+plot(iprofile(z), nind=1:2, pch=c(1,20), lty=3:4)
+plot(profile(z), nind=1:2, lty=1:2, add=T)
 }

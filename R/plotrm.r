@@ -18,23 +18,48 @@
 #
 #  SYNOPSIS
 #
-#     plot.profile(z, ...)
-#     plot.iprofile(z, ...)
-#     plot.residuals(z, ...)
+#     plot(profile(z, ...))
+#     plot(iprofile(z, ...))
+#     plot(residuals(z, ...))
 #
 #  DESCRIPTION
 #
 #    Utility functions for plotting repeated measurements profiles
 # and residuals
 
-plot.profile <- function(z, ...)
-	UseMethod("plot.profile")
+profile <- function(z, ...) UseMethod("profile")
 
-plot.profile.default <- function(z, times=NULL, nind=1, mu=NULL, add=F,
-	ylim=NULL, lty=NULL, ylab="Fitted value", xlab="Time", ...){
-	if(max(nind)>length(z$response$nobs))stop("no such individual")
+profile.default <- function(z, times=NULL, mu=NULL){
 	if(is.null(mu)||!is.function(mu)){
 		if(is.null(z$pred))stop("Fitted values not available")
+		if(!is.null(z$transform)){
+			if(z$transform=="exp")z$pred <- log(z$pred)
+			else if(z$transform=="square")z$pred  <- sqrt(z$pred)
+			else if(z$transform=="sqrt")z$pred <- z$pred^2
+			else if(z$transform=="log")z$pred <- exp(z$pred)}
+		z$ptimes <- z$response$times}
+	else {
+		z$ptimes <- if(is.null(times))seq(min(z$response$times),
+			max(z$response$times),length.out=25) else times
+		z$pred <- mu(z$coef,z$ptimes)}
+	class(z) <- c("profile",class(z))
+	invisible(z)}
+
+plot.profile <- function(z, nind=1, intensity=F, add=F,
+	ylim=range(z$pred,na.rm=T), lty=NULL, ylab=NULL, xlab=NULL, ...){
+	if(max(nind)>length(z$response$nobs))stop("no such individual")
+	if(inherits(z,"kalsurv")){
+		for(i in 1:length(z$response$y))if(z$response$y[i]==0)
+			z$response$y[i] <- z$response$y[i-1]
+		if(is.null(xlab))xlab <- "Chronological time"
+		if(intensity){
+			z$pred <- 1/z$pred
+			if(is.null(ylab))ylab <- "Mean intensity"}
+		else if(is.null(ylab))ylab <- "Time between events"}
+	else {
+		if(is.null(xlab))xlab <- "Time"
+		if(is.null(ylab))ylab <- "Fitted value"}
+	if(length(z$ptimes)==length(z$response$times)){
 		ns <- length(nind)
 		ii <- covind(z$response)
 		if(!is.null(lty)){
@@ -45,33 +70,79 @@ plot.profile.default <- function(z, times=NULL, nind=1, mu=NULL, add=F,
 		j <- 0
 		lt <- 0
 		for(i in nind){
-			j <- j+1
-			if(is.null(lty)) lt <- (lt%%4)+1
-			else lt <- lty[j]
-			if(first){
-				plot(z$response$times[ii==i], z$pred[ii==i], type="l", ylim=ylim, lty=lt, xlab=xlab, ylab=ylab, ...)
-				first <- FALSE}
-			else lines(z$response$times[ii==i], z$pred[ii==i], lty=lt)}}
+			if(is.null(z$response$nest)) kk <- nest <- 1
+			else {
+				nest <- unique(z$response$nest)
+				kk <- z$response$nest}
+			for(k in nest){
+				j <- j+1
+				if(is.null(lty)) lt <- (lt%%4)+1
+				else lt <- lty[j]
+				if(first){
+					plot(z$ptimes[ii==i&kk==k],z$pred[ii==i&kk==k],type="l",ylim=ylim,lty=lt,xlab=xlab,ylab=ylab,...)
+					first <- FALSE}
+				else lines(z$ptimes[ii==i&kk==k],z$pred[ii==i&kk==k],lty=lt)}}}
 	else {
-		yy <- mu(z$coef,times)
-		if(is.null(ylim))ylim <- c(min(yy),max(yy))
+		if(is.null(ylim))ylim <- c(min(z$pred),max(z$pred))
 		if(is.null(lty))lty <- 1
-		if(is.null(times))times <- seq(min(z$response$times),
-			max(z$response$times),length.out=25)
-		if(!add)plot(times, yy, type="l", ylim=ylim, lty=lty,
+		if(!add)plot(z$ptimes, z$pred, type="l", ylim=ylim, lty=lty,
 			xlab=xlab, ylab=ylab, ...)
-		else lines(times, yy, lty=lty)}}
+		else lines(z$ptimes, z$pred, lty=lty)}
+	if(!is.null(z$pse)){
+		lines(z$ptimes, z$pse[,1], lty=3)
+		lines(z$ptimes, z$pse[,2], lty=3)}}
 
-plot.iprofile <- function(z, ...)
-	UseMethod("plot.iprofile")
+iprofile <- function(z, ...) UseMethod("iprofile")
 
-plot.iprofile.default <- function(z, nind=1, obs=T, add=F, plotsd=F, lty=NULL,
-	pch=NULL, ylab="Recursive fitted value", xlab="Time", main=NULL,
-	ylim=NULL, xlim=NULL, ...){
+iprofile.default <- function(z, plotsd=F){
 	if(!inherits(z,"recursive"))
 		stop("The object must have class, recursive")
 	else if(is.null(z$rpred))stop("Individual profiles not available")
+	if(!is.null(z$transform)){
+                if(z$transform=="exp"){
+                	if(plotsd){
+                		sd1 <- log(z$rpred+2*z$sdr)
+                		sd2 <- log(z$rpred-2*z$sdr)}
+                	z$rpred <- log(z$rpred)}
+                else if(z$transform=="square"){
+                	if(plotsd){
+                		sd1 <- sqrt(z$rpred+2*z$sdr)
+                		sd2 <- sqrt(z$rpred-2*z$sdr)}
+                	z$rpred  <- sqrt(z$rpred)}
+                else if(z$transform=="sqrt"){
+                	if(plotsd){
+                		sd1 <- (z$rpred+2*z$sdr)^2
+                		sd2 <- (z$rpred-2*z$sdr)^2}
+                	z$rpred <- z$rpred^2}
+                else if(z$transform=="log"){
+                	if(plotsd){
+                		sd1 <- exp(z$rpred+2*z$sdr)
+                		sd2 <- exp(z$rpred-2*z$sdr)}
+                	z$rpred <- exp(z$rpred)}
+		else {
+			sd1 <- z$rpred+2*z$sdr
+			sd2 <- z$rpred-2*z$sdr}
+		if(plotsd)z$psd <- cbind(sd1,sd2)}
+	class(z) <- c("iprofile",class(z))
+	invisible(z)}
+
+plot.iprofile <- function(z, nind=1, observed=T, intensity=F, add=F, lty=NULL,
+	pch=NULL, ylab=NULL, xlab=NULL, main=NULL, ylim=NULL, xlim=NULL, ...){
 	if(max(nind)>length(z$response$nobs))stop("no such individual")
+	if(inherits(z,"kalsurv")){
+		for(i in 1:length(z$response$y))if(z$response$y[i]==0)
+			z$response$y[i] <- z$response$y[i-1]
+		if(is.null(xlab))xlab <- "Chronological time"
+		if(intensity){
+			z$rpred <- 1/z$rpred
+			z$response$y <- 1/z$response$y
+			if(is.null(ylab))ylab <- "Mean intensity"}
+		else if(is.null(ylab))ylab <- "Time between events"}
+	else {
+		if(is.null(xlab))xlab <- "Time"
+		if(is.null(ylab))ylab <- "Recursive fitted value"}
+	if(is.null(ylim)&&!is.null(z$sdr)&&z$transform=="identity")
+		ylim <- c(min(z$rpred-3*z$sdr,na.rm=T),max(z$rpred+3*z$sdr,na.rm=T))
 	ns <- length(nind)
 	ii <- covind(z$response)
 	pc <- -1
@@ -93,55 +164,68 @@ plot.iprofile.default <- function(z, nind=1, obs=T, add=F, plotsd=F, lty=NULL,
 	na <- !is.na(z$rpred)
 	j <- 0
 	for(i in nind){
-	        j <- j+1
-		if(is.null(pch))pc <- (pc+1)%%4
-		else pc <- pch[j]
-		if(is.null(lty)) lt <- (lt%%4)+1
-		else lt <- lty[j]
-		if(first){
-			plot(z$resp$times[ii==i&na],z$rpred[ii==i&na],type="l",
-				lty=lt, ylab=ylab, xlab=xlab, main=main, 
-				ylim=ylim, xlim=xlim, ...)
-			first <- F}
-		else lines(z$resp$times[ii==i&na],z$rpred[ii==i&na],lty=lt)
-		if(obs)points(z$resp$times[ii==i],z$resp$y[ii==i],pch=pc)
-		if(plotsd){
-			lines(z$resp$times[ii==i&na],z$rpred[ii==i&na]+
-				2*z$sdr[ii==i],lty=3)
-			lines(z$resp$times[ii==i&na],z$rpred[ii==i&na]-
-				2*z$sdr[ii==i],lty=3)}}}
+		if(is.null(z$response$nest)) kk <- nest <- 1
+		else {
+			nest <- unique(z$response$nest)
+			kk <- z$response$nest}
+		for(k in nest){
+			j <- j+1
+			if(is.null(pch))pc <- (pc+1)%%4
+			else pc <- pch[j]
+			if(is.null(lty)) lt <- (lt%%4)+1
+			else lt <- lty[j]
+			if(first){
+				plot(z$resp$times[ii==i&kk==k&na],z$rpred[ii==i&kk==k&na],type="l",lty=lt,ylab=ylab,xlab=xlab,main=main,ylim=ylim,xlim=xlim,...)
+				first <- F}
+			else {
+				if(k==1)lines(z$resp$times[ii==i&kk==k&na],z$rpred[ii==i&kk==k&na],lty=lt)
+				else lines(z$resp$times[ii==i&kk==k&na],c(z$pred[ii==i&kk==k&na][1],z$rpred[ii==i&kk==k&na][-1]),lty=lt)}
+			if(observed)points(z$resp$times[ii==i&kk==k],z$resp$y[ii==i&kk==k],pch=pc)
+			if(!is.null(z$psd)){
+				lines(z$resp$times[ii==i&kk==k&na],z$psd[ii==i&kk==k&na,1],lty=3)
+				lines(z$resp$times[ii==i&kk==k&na],z$psd[ii==i&kk==k&na,2],lty=3)}}}}
 
-plot.residuals <- function(z, ...)
-	UseMethod("plot.residuals")
-
-plot.residuals.default <- function(z, x=NULL, subset=NULL, ccov=NULL,
+plot.residuals <- function(z, x=NULL, subset=NULL, ccov=NULL,
 	nind=NULL, recursive=TRUE, pch=20, ylab="Residual",
 	xlab=NULL, main=NULL, ...){
-	if(!inherits(z,"recursive"))
-		stop("The object must have class, recursive")
 	na <- TRUE
-	if(!is.null(subset)){
-		tmp <- rep(FALSE,length(z$response$y))
+	reps <- !is.null(z$response$y)
+	if(!reps){
+		nind <- ccov <- NULL
+		recursive <- FALSE}
+	if(is.character(x))x <- match.arg(x,c("response","fitted"))
+	if(reps){
+		n <- length(z$response$y)
+		res <- if(inherits(z,"recursive"))
+			residuals(z, recursive=recursive) else residuals(z)
+		if(inherits(z,"kalsurv"))for(i in 1:length(z$response$y))
+			if(z$response$y[i]==0)
+				z$response$y[i] <- z$response$y[i-1]}
+	else {
+		res <- residuals(z)
+		n <- length(res)}
+	if(is.null(subset))subset <- rep(TRUE,n)
+	else {
+		tmp <- rep(FALSE,n)
 		tmp[subset] <- TRUE
 		subset <- tmp}
-	if(!is.null(nind)){
-		if(is.null(subset))subset <- rep(FALSE,length(z$response$y))
+	if(reps&&!is.null(nind)){
+		if(is.null(subset))subset <- rep(FALSE,n)
 		for(i in nind)subset <- subset|covind(z)==i}
-	if(is.null(subset))subset <- rep(TRUE,length(z$response$y))
-	res <- residuals(z, recursive=recursive)
-	if(is.character(x))x <- match.arg(x,c("response","fitted"))
 	if(is.null(x)){
 		x <- z$response$times
+		if(is.null(x))stop("x must be specified")
 		if(is.null(xlab))xlab <- "Time"}
 	else if(is.numeric(x)){
-		if(length(x)!=length(z$response$y))
+		if(length(x)!=n)
 			stop("x variable must have same length as residuals")
 		if(is.null(xlab))xlab <- paste(deparse(substitute(x)))}
 	else if(x=="response"){
-		x <- z$response$y
+		x <- if(reps)z$response$y else z$y
+		if(is.null(x))stop("response variable not found")
 		if(is.null(xlab))xlab <- "Response"}
 	else if(x=="fitted"){
-		x <- fitted(z, recursive=recursive)
+		x <- if(reps) fitted(z, recursive=recursive) else fitted(z)
 		na <- !is.na(x)
 		if(is.null(xlab))xlab <- "Fitted values"}
 	if(is.null(ccov))
@@ -149,7 +233,9 @@ plot.residuals.default <- function(z, x=NULL, subset=NULL, ccov=NULL,
 			xlab=xlab, main=main, ...)
 	else if(length(ccov)>1)stop("Only one covariate can be specified")
 	else {
-		un <- unique(z$response$ccov[,ccov])
+		mat <- match(ccov,colnames(z$response$ccov))
+		if(is.na(mat))stop("covariate not found")
+		un <- unique(z$response$ccov[,mat])
 		tmp <- par()$mfg[3:4]
 		ss <- ceiling(sqrt(length(un)))
 		if(length(un)==ss*(ss-1))ss1 <- ss-1
@@ -158,6 +244,6 @@ plot.residuals.default <- function(z, x=NULL, subset=NULL, ccov=NULL,
 		for(i in un){
 			ind <- (1:sum(z$response$nobs))[rep(z$response$ccov[,ccov],z$resp$nobs)==i]
 			main <- paste("Covariate ",cov,"=",i)
-			plot(x[subset&ind&na],res[subset&ind&na], pch=pch,
-				ylab=ylab, xlab=xlab, main=main, ...)}
+			plot(x[subset&ind&na],res[subset&ind&na],
+				pch=pch,ylab=ylab,xlab=xlab,main=main,...)}
 		par(mfrow=tmp)}}

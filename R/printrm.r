@@ -28,8 +28,8 @@ df.residual.gnlr <- function(z) z$df
 deviance.gnlr <- function(z) 2*z$maxlike
 
 print.gnlr <- function(z) {
-	sht <- z$nps>0
-	mix <- z$npm>0
+	sht <- z$nps>0||!is.null(z$shape)
+	mix <- z$npm>0||!is.null(z$mix)
 	gnlmm <- !is.null(z$points)
 	censor <- if(mix)!is.null(z$censor) else z$censor
 	npl <- z$npl-gnlmm
@@ -97,49 +97,57 @@ print.gnlr <- function(z) {
 	cat("AIC               ",z$aic,"\n")
 	cat("Iterations        ",z$iterations,"\n\n")
 	if(npl>0){
-		cat("Location parameters:\n")
+		if(z$common)cat("Common parameters:\n")
+		else cat("Location parameters:\n")
 		cname <- if(is.matrix(attr(z$mu,"model")))colnames(attr(z$mu,"model"))
 			else if(length(grep("linear",attr(z$mu,"parameters")))>0)
 			attr(z$mu,"parameters")[grep("\\[",attr(z$mu,"parameters"))]
 			else attr(z$mu,"parameters")
-		if(!is.null(z$linear[[1]])&&!is.null(attr(z$linear[[1]],"parameters")))cname <- c(colnames(attr(z$linear[[1]],"model")),cname)
+		if(!is.null(z$linear[[1]])&&!is.null(attr(z$linear[[1]],"parameters")))cname <- c(cname,colnames(attr(z$linear[[1]],"model")))
 		coef.table <- cbind(z$coefficients[1:npl],z$se[1:npl])
-		dimnames(coef.table) <- list(cname, c("estimate", "se"))
-		print.default(coef.table,digits=4,print.gap=2)}
+		if(!z$common){
+			dimnames(coef.table) <- list(cname, c("estimate", "se"))
+			print.default(coef.table,digits=4,print.gap=2)
+			cname <- NULL}}
 	if(z$npm>0){
-		cat("\nMixture parameters:\n")
-		cname <- if(is.matrix(attr(z$mix,"model")))colnames(attr(z$mix,"model"))
+		if(!z$common)cat("\nMixture parameters:\n")
+		cname <- c(cname,if(is.matrix(attr(z$mix,"model")))colnames(attr(z$mix,"model"))
 			else if(length(grep("linear",attr(z$mix,"parameters")))>0)
 			attr(z$mix,"parameters")[grep("\\[",attr(z$mix,"parameters"))]
-			else attr(z$mix,"parameters")
-		if(!is.null(z$linear[[2]])&&!is.null(attr(z$linear[[2]],"parameters")))cname <- c(colnames(attr(z$linear[[2]],"model")),cname)
-		coef.table <- cbind(z$coefficients[np1:(np-sht)],z$se[np1:(np-sht)])
+			else attr(z$mix,"parameters"))
+		if(!is.null(z$linear[[2]])&&!is.null(attr(z$linear[[2]],"parameters")))cname <- c(cname,colnames(attr(z$linear[[2]],"model")))
+		if(!z$common)coef.table <- cbind(z$coefficients[np1:(np-sht)],z$se[np1:(np-sht)])
 		dimnames(coef.table) <- list(cname, c("estimate", "se"))
 		print.default(coef.table,digits=4,print.gap=2)}
+	if(z$common||z$nps>0){
+		cname <- c(cname,if(z$npm>0)" "
+			else if(is.matrix(attr(z$shape,"model")))colnames(attr(z$shape,"model"))
+			else if(length(grep("linear",attr(z$shape,"parameters")))>0||length(grep("mu",attr(z$shape,"parameters")))>0)
+			attr(z$shape,"parameters")[grep("\\[",attr(z$shape,"parameters"))]
+			else attr(z$shape,"parameters"))
+		if(!is.null(z$linear[[2]])&&!is.null(attr(z$linear[[2]],"parameters")))cname <- c(cname,colnames(attr(z$linear[[2]],"model")))
+		if(!z$common)coef.table <- cbind(z$coefficients[np1a:np2],z$se[np1a:np2])
+		if(z$common){
+			dimnames(coef.table) <- list(unique(cname), c("estimate", "se"))
+			print.default(coef.table,digits=4,print.gap=2)}}
 	if(gnlmm){
 		cat("\nMixing standard deviation:\n")
 		coef.table <- cbind(z$coefficients[z$npl],z$se[z$npl])
 		dimnames(coef.table) <- list(" ", c("estimate", "se"))
 		print.default(coef.table, digits=4, print.gap=2)}
-	if(z$nps>0){
+	if(z$nps>0&&!z$common){
 		cat("\nShape parameters:\n")
-		cname <- if(z$npm>0)" "
-			else if(is.matrix(attr(z$shape,"model")))colnames(attr(z$shape,"model"))
-			else if(length(grep("linear",attr(z$shape,"parameters")))>0||length(grep("mu",attr(z$shape,"parameters")))>0)
-			attr(z$shape,"parameters")[grep("\\[",attr(z$shape,"parameters"))]
-			else attr(z$shape,"parameters")
-		if(!is.null(z$linear[[2]])&&!is.null(attr(z$linear[[2]],"parameters")))cname <- c(colnames(attr(z$linear[[2]],"model")),cname)
-		coef.table <- cbind(z$coefficients[np1a:np2],z$se[np1a:np2])
 		dimnames(coef.table) <- list(cname, c("estimate", "se"))
-		print.default(coef.table,digits=4,print.gap=2)}
-	if(z$npf>0){
-		cat("\nFamily parameters:\n")
-		cname <- if(is.matrix(attr(z$family,"model")))colnames(attr(z$family,"model"))
+		print.default(coef.table,digits=4,print.gap=2)
+		cname <- coef.table <- NULL}
+	if(z$npf>0||!is.null(z$family)){
+		if(!z$common)cat("\nFamily parameters:\n")
+		cname <- c(cname,if(is.matrix(attr(z$family,"model")))colnames(attr(z$family,"model"))
 			else if(length(grep("linear",attr(z$family,"parameters")))>0)
 			attr(z$family,"parameters")[grep("\\[",attr(z$family,"parameters"))]
-			else attr(z$family,"parameters")
-		if(!is.null(z$linear[[3]])&&!is.null(attr(z$linear[[3]],"parameters")))cname <- c(colnames(attr(z$linear[[3]],"model")),cname)
-		coef.table <- cbind(z$coefficients[np3:np],z$se[np3:np])
+			else attr(z$family,"parameters"))
+		if(!is.null(z$linear[[3]])&&!is.null(attr(z$linear[[3]],"parameters")))cname <- c(cname,colnames(attr(z$linear[[3]],"model")))
+		if(z$common)coef.table <- cbind(z$coefficients[np3:np],z$se[np3:np])
 		dimnames(coef.table) <- list(cname, c("estimate", "se"))
 		print.default(coef.table, digits=4, print.gap=2)}
 	if(np>1){

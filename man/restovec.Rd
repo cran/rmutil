@@ -35,27 +35,34 @@ of ones must be supplied.}
 \item{totals}{If the response is a matrix of binomial counts, a
 corresponding vector (one total or one per individual) or matrix of
 totals.}
-\item{weights}{A vector of frequencies or weights. Only applicable
-when \code{response} is a vector of independent observations.}
+\item{weights}{A vector, matrix, or list of vectors of frequencies or
+weights, of the same dimensions as the response.}
 \item{delta}{The unit of measurement (if not equal to unity), a scalar
-or a vector.}
+or a vector. If the response has been transformed, this should contain
+the numerical values of the Jacobian. When the \code{transform} method
+is applied to the response, this is automatically updated.}
 \item{type}{The type of measurement: nominal, ordinal, discrete,
 duration, continuous, or unknown. This becomes an attribute of the
 \code{response} object.}
 }
 \description{
-\code{restovec} transforms a list of vectors of event histories or of
-two or more column matrices with times, response values, and possibly
-binomial totals, nesting categories, censor indicators, and/or units of
-measurement, for each individual, or a matrix or dataframe of response
-values into an object of class, response.
+\code{restovec} produces an object of class, response, from a list of
+vectors of event histories or of two or more column matrices with
+times, response values, and possibly binomial totals, nesting
+categories, censor indicators, and/or units of measurement, for each
+individual, or a matrix or dataframe of response values.
 
 Such objects can be printed and plotted. NAs are removed with
 \code{rmna} (where necessary, incoordination with the appropriate
 covariates).
 
-Methods are available for extracting the response variable, the times,
-the nesting variable, and the weights.
+Methods are available for extracting the response, the numbers of
+observations per individual, the times, the weights, and the nesting
+variable: \code{response}, \code{nobs}, \code{times}, \code{weights},
+and \code{nesting}. The response and or the times may be transformed
+using \code{transform(z, y=fcn1(y), times=fcn2(times))} where fcn1 and
+fcn2 are transformations. When the response is transformed, the
+Jacobian is automatically calculated.
 }
 \value{
 Returns an object of class, response, containing a vector with the
@@ -68,12 +75,39 @@ information (z$delta).
 }
 \seealso{
 \code{\link{read.list}}, \code{\link{rmna}}, \code{\link{tcctomat}},
-\code{\link{tvctomat}}.
+\code{\link{transform}}, \code{\link{tvctomat}}.
 }
 \author{J.K. Lindsey}
 \examples{
 y <- matrix(rnorm(20),ncol=5)
+# times assumed to be 1:5
 restovec(y)
-times <- c(1,3,6,10,15)
-restovec(y,times=times)
+#unequally-spaced times
+tt <- c(1,3,6,10,15)
+print(resp <- restovec(y,times=tt))
+response(resp)
+response(resp, nind=2:3)
+times(resp)
+nobs(resp)
+weights(resp)
+nesting(resp)
+# because individuals are the only nesting, this is the same as
+covind(resp)
+# binomial
+y <- matrix(rpois(20,5),ncol=5)
+# responses summarized as relative frequencies
+print(respb <- restovec(y,totals=y+matrix(rpois(20,5),ncol=5),times=tt))
+response(respb)
+# censored data
+y <- matrix(rweibull(20,2,5),ncol=5)
+print(respc <- restovec(y,censor=matrix(rbinom(20,1,0.9),ncol=5),times=tt))
+# if there is no censoring, censor indicator is not printed
+response(respc)
+# nesting clustered within individuals
+nest <- c(1,1,2,2,2)
+print(respn <- restovec(y,censor=matrix(rbinom(20,1,0.9),ncol=5),
+	times=tt,nest=nest))
+response(respn)
+times(respn)
+nesting(respn)
 }

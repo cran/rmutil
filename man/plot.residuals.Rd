@@ -14,7 +14,7 @@ plot.residuals(z, x=NULL, subset=NULL, ccov=NULL, nind=NULL,
 used. It can also be specified by the strings "response" or "fitted".}
 \item{subset}{A logical vector defining which observations are to be
 used.}
-\item{ccov}{If the index number of a time-constant covariate is
+\item{ccov}{If the name of a time-constant covariate is
 supplied, separate plots are made for each distinct value of that
 covariate.}
 \item{nind}{Observation number(s) of individual(s) to be plotted.}
@@ -33,6 +33,7 @@ obtained from Kalman fitting for given subsets of the data.
 \code{\link{plot.iprofile}}, \code{\link{plot.profile}}.
 }
 \examples{
+library(repeated)
 times <- rep(1:20,2)
 dose <- c(rep(2,20),rep(5,20))
 mu <- function(p) exp(p[1]-p[3])*(dose/(exp(p[1])-exp(p[2]))*
