@@ -1,0 +1,276 @@
+6.4.99
+elliptic.r, gnlmm.r, gar.r, kalseries.r, kalcount.r, kalsurv.r, ehr.r,
+	 nordr.r, nlr.r: modified to use fnenvir
+5.4.99
+gnlr.r, gnlr3.r, fmr.r: modified to use fnenvir
+4.4.99
+fnenvir: checks functions for covariates and parameters and
+	 modifies them to read from data objects
+1.4.99
+elliptic.r: modified to use model formulae with unknowns
+finterp.r: added data objects as environment
+tvctomat, tcctomat: can combine two data objects
+31.3.99
+gar.r: modified to use model formulae with unknowns
+30.3.99
+rmna: check if a covariate only has one value after NA removal
+fixed examples docs so that they work
+29.3.99
+kalcount.r, kalsurv.r, ehr.r: modified to use model formulae with unknowns
+28.3.99
+gnlmm.r, kalseries: modified to use model formulae with unknowns
+restovec: added coordinates to response class for spatial data
+26.3.99
+gnlr.r, gnlr3.r, fmr.r, nordr.r, nlr.r: modified to use model formulae
+	with unknowns
+24.3.99
+changed language check to inherits formula in all functions
+added methods for extracting elements from data objects
+finterp.r: transforms model formulae with unknowns into functions
+22.3.99
+restovec: times no longer required for clustered data
+	type attribute added
+carma.r, elliptic.r, kalseries.r kalcount.r: check to see if times available
+15.3.99
+rmaov.r: wrote documentation
+pkpd.r : added two new models and corrected one other
+13.3.99
+restovec: allow ties in times
+23.2.99
+gar.c: corrected Laplace cdf and allowed negative values
+11.2.99
+ehr: corrected for ties
+kalsurv.r: prints out "birth process" when applicable instead of
+	renewal process
+logitord.r: removed DUP=F from Fortran call
+8.2.99
+km.r: fixed bug in plot.dist.km when several groups are plotted
+7.2.99
+improved handling of variable names in tcctomat, tvctomat, and
+	functions calling them
+rmaov.r: split-plot aov from Ralf Goertz
+6.2.99
+glmm.r: accepts transformed data if dataframe supplied
+5.2.99
+km.r: fixed bug for double lines with censored observations
+ehr.r: modified handling of language
+4.2.99
+km.r: added print.km to remove attributes
+restovec: accepts all response data, not just repeated measurements
+tvctomat: added calculation of interactions
+2.2.99
+restovec: added adding several column matrices in lists with censoring
+kalsurv.r: added delta option
+1.2.99
+glmm.r: binary response with binomial handled correctly
+30.1.99
+plot.iprofile.carma: corrected nind argument
+restovec, carma, elliptic, kalcount, kalseries: added how to handle `times'
+	  for clustered data to docs
+28.1.99
+bivbinom.r, marghom.r: minor corrections
+rs.r: improved printout
+26.1.99
+readrm.r: corrected lty specification in plot.response
+	  added option to plot points
+24.1.99
+gnlr.r, gnlr3.r, fmr.r, gnlmm.r: y can have classes, response or repeated
+added DUP=F to all .C and .Fortran calls
+pbirth.r: binomial data distributions
+22.1.99
+readrm.r: added ... for graphics options in plot.response and plot.repeated
+21.1.99
+rmna: added checks that ccov and tvcov have correct class
+19.1.99
+dist.c: changed static romberg to romberg2 and added static interp
+carma.r, chidden.r, elliptic.r, gar.r, hidden.r, kalcount.r, kalseries.r,
+	kalsurv.r: allow response to have class, repeated
+restovec: allow delta to be a dataframe
+18.1.99
+corrections by Brian Ripley
+gnlm: removed redundant dist.c
+enclosed library.dynam in .First.lib
+potthoff.r: added matrix dimension checks
+util.r: removed orth function
+potthoff.r: replaced orth by contr.poly
+17.1.99
+carma.r, chidden.r, elliptic.r, gar.r, hidden.r, kalcount.r, kalseries.r,
+	kalsurv.r: copy response vector more efficiently
+restovec: added total time for survival data
+coxre.r: reorganized for efficiency, eliminating data.frame
+cprocess.r: times can have class, response
+16.1.99
+gnlr.r, gnlr3.r, fmr.r, gnlmm.r: removed -delta/2 in right censoring
+	calculation
+dist.r, gnlr3.r, gar.c, hidden.f: changed parametrization of Burr to
+	agree with kalsurv.r
+elliptic.r: use var(y) to get initial estimate of variance
+------------------------------------------------------------------------------
+14.1.99
+kalsurv.r: corrected printing of number of subjects and observations
+2.1.99
+cprocess.r: allow event counts with unequal times
+added mode="double" to is.vector
+29.12.98
+corrected minor bugs in fmr
+28.12.98
+corrected abs bug for Laplace in kalman C functions
+27.12.98
+restovec: corrected binary totals when given as a vector
+gar: added Levy, Pareto, generalized inverse Gauss, and
+     power exponential distributions
+hidden and chidden: added various overdispersed and continuous distributions
+22.12.98
+hidden and chidden: added filter calculation and plots
+21.12.98
+moved Student t from gnlr to gnlr3
+renamed beta as Pareto in kalcount, kalseries, and kalsurv
+corrected various minor errors in fmr and gnlr3
+20.12.98
+dist.r, gnlr.r, fmr.r: added gamma count and Pareto distributions
+18.12.98
+chidden: continuous-time hidden Markov chain models
+7.12.98
+dist.r, gnlr.r, fmr.r: added Levy distribution
+removed .so from Makefiles and library.dynam 
+6.12.98
+util.r: added spectral decomposition to mexp
+5.12.98
+rmutil: added several p and d functions
+gnlr3.r: added censored generalized inverse Gaussian and power
+	 exponential distributions
+2.12.98
+int.r: vectorized Romberg integration
+1.12.98
+int.r: added option for Romberg integration
+30.11.98
+updated libraries with Brian Ripley's corrections
+25.11.98
+hidden:	allow values in the transition matrix to be fixed at 0 or 1
+24.11.98
+hidden: added independence model
+23.11.98
+inthaz.c: changed header include
+bessel: removed function
+gnlr3.r: changed to internal bessel function
+14.11.98
+hidden: added multinomial distribution
+12.11.98
+hidden.f: corrected Poisson and binomial calculations
+5.11.98
+carmasub.f and survkit.f: changes for compatibility with g77
+------------------------------------------------------------------------------
+2.11.98
+ehr.r: corrected printing coefficients with linear and other parameters
+1.11.98
+km.r: corrected NaNs in log
+29.10.98
+carma.r: corrected printout of mean time
+km.r: corrected ylab for cdf
+26.10.98
+rmna: handles NAs in time-constant covariates properly
+carma.r and elliptic.r: accept ccov of class, tccov
+cprocess.r: added plots from counts of events
+19.10.98
+changed to inherits() throughout
+rationalized printing of gnlr, gnlr3, fmr, gnlmm and moved to rmutil
+added delta option to carma and elliptic
+18.10.98
+carma.r and elliptic.r: added handling of delta when y has class, response
+17.10.98
+gar.r: added cloglog link
+12.10.98
+gnlmm.r: corrected handling of delta when y has class, response
+11.10.98
+replaced tapply() with collapse() in bivbinom, catmiss, glmm, gnlmm, ehr, coxre
+10.10.98
+ehr.r check for singular covariance matrix
+      print names of variables for coefficients when language
+8.10.98
+kcountb.c: corrected dplogis call
+gnlmm.r: corrected calls to ddp, dmp, ddb, and dmb
+coxre.r: removed as.is=T in data.frame
+corrected printing shape parameters when language used in gnlr, gnlr3,
+	fmr, gnlmm
+7.10.98
+rs.r: put in check that all covariates are positive
+gnlmm.r: set censor to F for binomial data
+dist.c: changed ddp, dmp, ddb, and dmb to log and introduced weights
+6.10.98
+kseries.c: corrected error in serial update
+kalseries.r: correcting printing error when there is an interaction
+kalsurv: added serial update
+inthaz.c: put back ihlogis (disappeared with nmath)
+renamed wr.r as util.r
+moved det and %**% from repeated and growth to rmutil/R/util.r
+5.10.98
+corrected check in carma, elliptic, gar, and kalseries for nonpositive
+	transformed values
+4.10.98
+glmm.r: corrected two errors
+1.10.98
+extended residual plots to all of class recursive
+kalcount, kalseries, kalsurv: return mean profiles in z$pred
+plot.profile: accepts z$pred as well as a mean function
+nbkal.r: corrections
+corrected and updated a lot of docs
+30.9.98
+moved kalsurv to event library
+renamed rmtools as rmutil
+inthaz.c: corrected error from change to nmath
+29.8.98
+kalsurv.r: added recursive fitted values
+kalseries.r: added recursive fitted values
+updated plot.residuals for recursive class
+27.9.98
+corrected docs for plot.profile, plot.iprofile
+added covind.default
+plot.iprofile: corrected default settings
+24.9.98
+gettvc.r: allow an option for ties
+bessel.r: only calculate one kind of function
+20.9.98
+gettvc.r: allow NAs in time-varying covariate
+	  corrected for ties between response and covariate
+tvctomat: allow tvcov to already have class, "tvcov"
+added as.double in all Fortran and C calls
+18.9.98
+plotrm.r: corrected bug in plot.iprofile due to new covind()
+16.9.98
+pkpd.r: corrected mu2.0o2c and added mu2.0o2cfp
+15.9.98
+replaced Bessel, Gauss-Hermite, and integration routines
+bessel.r: added docs
+14.9.98
+moved wr to rmtools and added docs
+added covind function to rmtools
+12.9.98
+kalserie.r: added delta option
+tcctomat.Rd: corrected alias
+created new library, rmtools
+11.9.98
+dist.r: added beta binomial
+dist.c: simplified calls to overdispersion functions
+autocor.r: corrected pergram
+kalserie.r: corrected error in printing parameters with torder>0
+kserieb.c: corrected error when mu function used
+10.9.98
+readlist.r: corrected binomial totals for lists in restovec
+fmr.r: removed unnecessary code
+gar.r: added overdispersed binomial data
+dist.r: allow dispersion to be a scalar when mean is a vector
+	created documentation for p and d functions
+9.9.98
+nordr.r: corrected weights for adjacent categories model
+	 test for p>1 in proportional odds
+gar.r: added checks on times and mu arguments
+       added binomial data
+corrected docs for elliptic, gar, kalcount, kalseries, kalsurv, nbkal
+	  for z$index
+clarified docs for rmna, restovec, tcctomat, and tvctomat
+8.9.98
+removed backslash at end of Makefiles for event, gnlm, growth
+moved integer declarations to the beginning in carmasub.f,
+      elliptic.f, gettvc.f, survkit.f so that g77 should work
+5.9.98
+gar.r Corrected predictions for transformed responses
