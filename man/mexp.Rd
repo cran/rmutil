@@ -1,9 +1,13 @@
 \name{mexp}
 \title{Matrix Exponentiation}
+\alias{mexp}
 \usage{
 mexp(x, t=1, type="spectral decomposition", n=20, k=3)
 }
-\alias{mexp}
+\description{
+\code{mexp} calculates \code{exp(t*x)} for the square matrix, \code{x}, by
+spectral decomposition or series expansion.
+}
 \arguments{
 \item{x}{A square matrix.}
 \item{t}{Constant multiplying the matrix.}
@@ -13,11 +17,11 @@ mexp(x, t=1, type="spectral decomposition", n=20, k=3)
 approximation only).}
 }
 \value{
-\code{mexp} calculates \code{exp(t*x)} for the square matrix, \code{x}, by
-spectral decomposition or series expansion.
+\code{mexp} returns the exponential of a matrix.
 }
 \author{J.K. Lindsey}
 \examples{
 x <- matrix(c(1,2,3,4),nrow=2)
 mexp(x)
 }
+\keyword{array}

@@ -4,9 +4,7 @@
 */
 
 #include "f2c.h"
-
-void call_R(char *func, long nargs, void **arguments, char **modes,
-	    long *lengths, char **names, long nres, char **results);
+#include "R_ext/RS.h"
 
 /* Table of constant values */
 
@@ -17,7 +15,7 @@ static doublereal c_b12 = 0.;
 /*     ALGORITHM APPEARED IN ACM-TRANS. MATH. SOFTWARE, VOL.10, NO. 2, */
 /*     JUN., 1984, P. 152-160. */
 /*<       SUBROUTINE INTHP(A, B, D, F, M, P, EPS, INF, QUADR)                >*/
-/* Subroutine */ int inthp_(doublereal *a, doublereal *b, doublereal *d__, 
+/* Subroutine */ int inthp(doublereal *a, doublereal *b, doublereal *d__, 
 	void *f, integer *m, doublereal *p, doublereal *eps, integer *inf, 
 	doublereal *quadr)
 {
@@ -25,7 +23,7 @@ static doublereal c_b12 = 0.;
     doublereal d__1;
 
     /* Builtin functions */
-    double atan(doublereal), sqrt(doublereal), exp(doublereal), pow_dd(
+    double atan(doublereal), sqrt(doublereal), exp(doublereal), R_pow(
 	    doublereal *, doublereal *), log(doublereal);
 
     /* Local variables */
@@ -356,7 +354,7 @@ L10:
 	alfa = (*p - 1.f) / *p;
     }
 /*<       C = 2.*PI/(1.-1./EXP(PI*SQRT(ALFA))) + 4.**ALFA/ALFA >*/
-    c__ = pi * 2.f / (1.f - 1.f / exp(pi * sqrt(alfa))) + pow_dd(&c_b8, &alfa)
+    c__ = pi * 2.f / (1.f - 1.f / exp(pi * sqrt(alfa))) + R_pow(&c_b8, &alfa)
 	     / alfa;
 /*<       W = dLOG(C/EPS) >*/
     w = log(c__ / *eps);
@@ -730,7 +728,7 @@ L200:
 /*<       SUM2 = SUM1 + COR + SUM >*/
     sum2 = sum1 + cor + sum;
 /*<       M2 = 2*(K+L) >*/
-    m2 = k + l << 1;
+    m2 = (k + l) << 1;
 
 /*     CHECK THE NUMBER OF FUNCTION EVALUATIONS */
 

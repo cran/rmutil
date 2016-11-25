@@ -1,6 +1,6 @@
 c
 c  rmutil : A Library of Special Functions for Repeated Measurements
-c  Copyright (C) 1998 J.K. Lindsey
+c  Copyright (C) 1998, 1999, 2000, 2001 J.K. Lindsey
 c
 c  This program is free software; you can redistribute it and/or modify
 c  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ c
  9       continue
          do 19 i=1,nld*2
             ndelta(n,i)=.false.
-            tvcov2(n,i)=-1e301
+            tvcov2(n,i)=-1e30
  19      continue
          indx=1
          indk=1
@@ -76,14 +76,14 @@ c
             if(indx.le.nobs(n))then
                recx=x(nm+indx)
             else
-               recx=1e301
+               recx=1e30
             endif
             if(indk.le.nknt(n))then
                reck=xtvc(nm1+indk)
             else
-               reck=1e301
+               reck=1e30
             endif
-            if((recx.ge.1e300).and.(reck.ge.1e300)) ldone=.true.
+            if((recx.ge.1e30).and.(reck.ge.1e30)) ldone=.true.
             go to 10
          endif
          nu(n)=indu-1
@@ -96,7 +96,8 @@ c
 c
 c     find time-varying covariate values
 c
-         if(x(nm+1).ge.xtvc(nm1+1))then
+         if((x(nm+1).ge.xtvc(nm1+1).and.ties).or.
+     +        (x(nm+1).gt.xtvc(nm1+1).and..not.ties))then
             reck=tvcov2(n,1)
          else
             reck=0

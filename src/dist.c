@@ -1,6 +1,6 @@
 /*
  *  rmutil : A Library of Special Functions for Repeated Measurements
- *  Copyright (C) 1998 J.K. Lindsey
+ *  Copyright (C) 1998, 1999, 2000, 2001 J.K. Lindsey
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,14 +24,18 @@
  * void pmp(int q[], int *my, double m[], double s[], int *nn, double res[])
  * void dmp(int y[], int *my, double m[], double s[], int *nn,
  *	 double wt[], double res[])
- * void pmb(int q[], int n[], double m[], double s[], int *nn, double res[])
+ * void ppvfp(int q[], double m[], double s[], double f[], int *nn,
+ *       double res[])
+ * void dpvfp(int y[], double m[], double s[], double f[], int *nn,
+ *	 double wt[], double res[])
+ * void pdb(int q[], int n[], double m[], double s[], int *nn, double res[])
  * void ddb(int y[], int n[], double m[], double s[], int *nn,
  *	 double wt[], double res[])
  * void pmb(int q[], int n[], double m[], double s[], int *nn, double res[])
  * void dmb(int y[], int n[], double m[], double s[], int *nn,
  *	 double wt[], double res[])
  *
- * void plevy(double y[], double m[], double s[], double f[], int *len,
+ * void psimplex(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
  * void pginvgauss(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
@@ -52,12 +56,9 @@
 
 #include <math.h>
 #include <stddef.h>
-#include "Mathlib.h"
-
-extern double lgamma(double x);
-extern double lchoose(double n, double k);
-extern double bessel_k(double x, double alpha, double expo);
-extern double gammafn(double x);
+#include "dist.h"
+#include "R.h"
+#include "Rmath.h"
 
 /* double Poisson */
 static double dpnc(int my, double m, double s){
@@ -65,7 +66,7 @@ static double dpnc(int my, double m, double s){
   double r;
   r=exp(-s*m);
   for(i=1;i<=my;i++)
-    r+=exp(i*(1-s)*log((double)i)+i*s*log(m)+i*(s-1)-s*m-lgamma(i+1.));
+    r+=exp(i*(1-s)*log((double)i)+i*s*log(m)+i*(s-1)-s*m-lgammafn(i+1.));
   return(r);}
 
 void pdp(int q[], int *my, double m[], double s[], int *nn, double res[]){
@@ -79,14 +80,15 @@ void ddp(int y[], int *my, double m[], double s[], int *nn,
   for(i=0;i<*nn;i++){
     if(wt[i]>0){
       y1=y[i]>0?y[i]:1;
-      res[i]=wt[i]*(-s[i]*m[i]+y[i]*s[i]*(1+log(m[i]/y1))+y[i]*log((double)y1)-y[i]-lgamma(y[i]+1.)-log(dpnc(*my,m[i],s[i])));}}}
+      res[i]=wt[i]*(-s[i]*m[i]+y[i]*s[i]*(1+log(m[i]/y1))+y[i]*log((double)y1)-y[i]-lgammafn(y[i]+1.)-log(dpnc(*my,m[i],s[i])));}
+    else res[i]=0;}}
 
 /* multiplicative Poisson */
 static double mpnc(int my, double m, double s){
   int i;
   double r;
   r=0.;
-  for(i=0;i<=my;i++)r+=exp(i*log(m)+i*i*s-m-lgamma(i+1.));
+  for(i=0;i<=my;i++)r+=exp(i*log(m)+i*i*s-m-lgammafn(i+1.));
   return(r);}
 
 void pmp(int q[], int *my, double m[], double s[], int *nn, double res[]){
@@ -98,13 +100,59 @@ void pmp(int q[], int *my, double m[], double s[], int *nn, double res[]){
 
 void dmp(int y[], int *my, double m[], double s[], int *nn,
 	 double wt[], double res[]){
-  int i,y1;
+  int i;
   double ss;
   for(i=0;i<*nn;i++){
     if(wt[i]>0){
       ss=log(s[i]);
-      y1=y[i]>0?y[i]:1;
-      res[i]=wt[i]*(-m[i]+y[i]*y[i]*ss+y[i]*log(m[i])-lgamma(y[i]+1)-log(mpnc(*my,m[i],ss)));}}}
+      res[i]=wt[i]*(-m[i]+y[i]*y[i]*ss+y[i]*log(m[i])-lgammafn(y[i]+1)-log(mpnc(*my,m[i],ss)));}
+    else res[i]=0;}}
+
+/* power variance function Poisson */
+
+static double pvfc(int y, double m, double s, double f){
+  int i,j;
+  double r,*c,tmp1,tmp2,tmp3,tmp4;
+  c=(double*)R_alloc((size_t)(y*y),sizeof(double));
+  tmp1=gammafn(1.-f);
+  tmp2=log(m);
+  tmp3=log(s+1.);
+  tmp4=log(s);
+  for(i=0;i<y;i++){
+    c[i*(y+1)]=1;
+    if(i>0){
+      c[i*y]=gammafn(i+1-f)/tmp1;
+      if(i>1)
+	for(j=1;j<i;j++)c[y*i+j]=c[y*(i-1)+j-1]+c[y*(i-1)+j]*(i-(j+1)*f);}}
+  r=0.;
+  for(i=1;i<=y;i++){
+    r+=c[y*(y-1)+i-1]*exp(i*tmp2+(i*f-y)*tmp3-(i*(f-1))*tmp4);}
+  return(r);}
+
+void dpvfp(int y[], double m[], double s[], double f[], int *nn,
+	 double wt[], double res[]){
+  int i;
+  for(i=0;i<*nn;i++){
+    if(wt[i]>0){
+      if(f[i]==0.)res[i]=dnbinom(y[i],m[i]*s[i],s[i]/(1+s[i]),0);
+      else {
+	res[i]=wt[i]*exp(-m[i]*((s[i]+1.)*pow((s[i]+1.)/s[i],f[i]-1.)-s[i])/f[i]);
+	if(y[i]>0)res[i]*=pvfc(y[i],m[i],s[i],f[i]);
+	if(y[i]>1)res[i]/=gammafn(y[i]+1);}}
+    else res[i]=0;}}
+
+void ppvfp(int q[], double m[], double s[], double f[], int *nn, double res[]){
+  int i,j;
+  static int k=1;
+  static double wt=1;
+  double tmp;
+  for(i=0;i<*nn;i++){
+    if(f[i]==0.)res[i]=pnbinom(q[i],m[i]*s[i],s[i]/(1+s[i]),1,0);
+    else {
+      res[i]=0.;
+      for(j=0;j<q[i];j++){
+	dpvfp(&j,&(m[i]),&(s[i]),&(f[i]),&k,&wt,&tmp);
+	res[i]+=tmp;}}}}
 
 /* double binomial */
 static double dbnc(int yy, int n, double m, double s){
@@ -112,9 +160,9 @@ static double dbnc(int yy, int n, double m, double s){
   double r;
   r=0.;
   for(y=0;y<=yy;y++)
-	r+=exp(lchoose((double)n,(double)y)+((n-y)*s)*log(1.-m)
-	  +y*s*log(m)-n*(1-s)*log((double)n)+(y>0?y*(1-s)*log((double)y):0)
-	  +(y<n?(n-y)*(1-s)*log((double)(n-y)):0));
+    r+=exp(lchoose((double)n,(double)y)+n*(s-1)*log((double)n)
+	   +y*s*log(m)+((n-y)*s)*log(1.-m)-(y>0?y*(s-1)*log((double)y):0)
+	   -(y<n?(n-y)*(s-1)*log((double)(n-y)):0));
   return(r);}
 
 void pdb(int q[], int n[], double m[], double s[], int *nn, double res[]){
@@ -130,17 +178,18 @@ void ddb(int y[], int n[], double m[], double s[], int *nn,
       y2=n[i]-y[i];
       yy1=y[i]>0?y[i]:1;
       yy2=y2>0?y2:1;
-      res[i]=wt[i]*(s[i]*n[i]*log((double)n[i])+s[i]*y[i]*log(m[i]/yy1)
-		 +s[i]*y2*log((1.-m[i])/yy2)+lchoose((double)n[i],(double)y[i])
-		 +y[i]*log((double)yy1)+y2*log((double)yy2)-n[i]*log((double)n[i])
-		 -log(dbnc(n[i],n[i],m[i],s[i])));}}}
+      res[i]=wt[i]*(lchoose((double)n[i],(double)y[i])+
+		    (s[i]-1)*n[i]*log((double)n[i])+s[i]*y[i]*log(m[i])
+		    +s[i]*y2*log(1.-m[i])-(s[i]-1)*y[i]*log((double)yy1)
+		    -(s[i]-1)*y2*log((double)yy2)-log(dbnc(n[i],n[i],m[i],s[i])));}
+    else res[i]=0;}}
 
 /* multiplicative binomial */
 static double mbnc(int yy, int n, double m, double s){
   int y;
   double r;
   r=0.;
-  for(y=0;y<=yy;y++)r+=exp(lchoose((double)n,(double)y)+(n-y)*log(1.-m)+y*(log(m)+(n-y)*s));
+  for(y=0;y<=yy;y++)r+=exp(lchoose((double)n,(double)y)+(n-y)*log(1.-m)+y*(log(m)+(n-y)*y*s));
   return(r);}
 
 void pmb(int q[], int n[], double m[], double s[], int *nn, double res[]){
@@ -159,7 +208,8 @@ void dmb(int y[], int n[], double m[], double s[], int *nn,
       ss=log(s[i]);
       res[i]=wt[i]*(lchoose((double)(n[i]),(double)y[i])+y[i]*log(m[i])
 		 +(n[i]-y[i])*(log(1.-m[i])
-			       +y[i]*ss)-log(mbnc(n[i],n[i],m[i],ss)));}}}
+			       +(n[i]-y[i])*y[i]*ss)-log(mbnc(n[i],n[i],m[i],ss)));}
+    else res[i]=0;}}
 
 /* romberg integration routines */
 static void interp(double x[], double fx[], int pts, double tab1[],
@@ -232,16 +282,16 @@ static void romberg2(void fcn(), double *a, double *b, int len,
   int i,j,j1,finish;
   double errsum,*tab1,*tab2,*x,*fx,*sum,*tmpsum,*zz,*pnt1,*pnt2,*y;
 
-  x=(double*)malloc((size_t)((max*len)*sizeof(double)));
-  fx=(double*)malloc((size_t)((max*len)*sizeof(double)));
-  sum=(double*)malloc((size_t)(len*sizeof(double)));
-  tmpsum=(double*)malloc((size_t)(len*sizeof(double)));
-  zz=(double*)malloc((size_t)(len*sizeof(double)));
-  pnt1=(double*)malloc((size_t)(len*sizeof(double)));
-  pnt2=(double*)malloc((size_t)(len*sizeof(double)));
-  tab1=(double*)malloc((size_t)(pts*sizeof(double)));
-  tab2=(double*)malloc((size_t)(pts*sizeof(double)));
-  y=(double*)malloc((size_t)(len*sizeof(double)));
+  x=(double*)R_alloc((size_t)(max*len),sizeof(double));
+  fx=(double*)R_alloc((size_t)(max*len),sizeof(double));
+  sum=(double*)R_alloc((size_t)len,sizeof(double));
+  tmpsum=(double*)R_alloc((size_t)len,sizeof(double));
+  zz=(double*)R_alloc((size_t)len,sizeof(double));
+  pnt1=(double*)R_alloc((size_t)len,sizeof(double));
+  pnt2=(double*)R_alloc((size_t)len,sizeof(double));
+  tab1=(double*)R_alloc((size_t)pts,sizeof(double));
+  tab2=(double*)R_alloc((size_t)pts,sizeof(double));
+  y=(double*)R_alloc((size_t)len,sizeof(double));
   if(!x||!fx||!sum||!tmpsum||!zz||!pnt1||!pnt2||!tab1||!tab2||!y){
     *err=1;
     return;}
@@ -255,33 +305,27 @@ static void romberg2(void fcn(), double *a, double *b, int len,
       fx[j+i*max]=sum[i];
       if(j1>=pts){
 	interp(&x[j1-pts+i*max],&fx[j1-pts+i*max],pts,tab1,tab2,&sumlen[i],&errsum,err);
-	if(*err)goto end;
+	if(*err)return;
 	if(fabs(errsum)>eps*fabs(sumlen[i]))finish=0;}
       x[j1+i*max]=x[j+i*max]/9.0;
       fx[j1+i*max]=fx[j+i*max];}
-    if(finish)goto end;}
+    if(finish)return;}
   *err=3;
- end: free((char *)x);
-  free((char *)fx);
-  free((char *)sum);
-  free((char *)tmpsum);
-  free((char *)zz);
-  free((char *)pnt1);
-  free((char *)pnt2);
-  free((char *)tab2);
-  free((char *)tab1);
-  free((char *)y);
   return;}
 
-/* Levy distribution */
-static void dlevy(double y[], double m[], double s[], double f[], int len,
+/* simplex distribution */
+static void dsimplex(double y[], double m[], double s[], double f[], int len,
 	   double res[]){
   int i;
-  for(i=0;i<len;i++)res[i]=sqrt(s[i]/(2.*M_PI*pow(y[i]-m[i],3)))*exp(-s[i]/(2.*(y[i]-m[i])));}
+  for(i=0;i<len;i++)res[i]=exp(-pow((y[i]-m[i])/(m[i]*(1-m[i])),2)/(2*y[i]*(1-y[i])*s[i]))/sqrt(2*M_PI*s[i]*pow(y[i]*(1-y[i]),3));}
 
-void plevy(double y[], double m[], double s[], double f[], int *len,
+void psimplex(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
-  romberg2(dlevy, m, y, *len, m, s, f, *eps, *pts, *max, err, res);}
+  double *x;
+  int i;
+  x=(double*)R_alloc((size_t)(*len),sizeof(double));
+  for(i=0;i<*len;i++)x[i]=0;
+  romberg2(dsimplex, x, y, *len, m, s, f, *eps, *pts, *max, err, res);}
 
 /* generalized inverse Gaussian distribution */
 static void dginvgauss(double y[], double m[], double s[], double f[], int len,
@@ -293,10 +337,9 @@ void pginvgauss(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
   double *x;
   int i;
-  x=(double*)malloc((size_t)((*len)*sizeof(double)));
+  x=(double*)R_alloc((size_t)(*len),sizeof(double));
   for(i=0;i<*len;i++)x[i]=0;
-  romberg2(dginvgauss, x, y, *len, m, s, f, *eps, *pts, *max, err, res);
-  free(x);}
+  romberg2(dginvgauss, x, y, *len, m, s, f, *eps, *pts, *max, err, res);}
 
 /* power exponential distribution */
 static void dpowexp(double y[], double m[], double s[], double f[], int len,
@@ -312,7 +355,6 @@ void ppowexp(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
   double *x;
   int i;
-  x=(double*)malloc((size_t)((*len)*sizeof(double)));
+  x=(double*)R_alloc((size_t)(*len),sizeof(double));
   for(i=0;i<*len;i++)x[i]=fabs(y[i]-m[i])+m[i];
-  romberg2(dpowexp, m, x, *len, m, s, f, *eps, *pts, *max, err, res);
-  free(x);}
+  romberg2(dpowexp, m, x, *len, m, s, f, *eps, *pts, *max, err, res);}

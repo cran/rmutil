@@ -1,7 +1,14 @@
 \name{read.surv}
-\title{Read a list of matrices from a file for use with kalsurv.}
+\title{Read a List of Matrices from a File for Repeated Times to Events}
+\alias{read.surv}
 \usage{
-read.list(file="", skip=0, nlines=1, cumulative=T, all=T)
+read.surv(file="", skip=0, nlines=1, cumulative=TRUE, all=TRUE)
+}
+\description{
+\code{read.surv} reads sets of lines of data from a file. Each set may
+contain a series of duration times followed by a censor indicator for
+the last value (\code{all=FALSE}) or a series of pairs of times followed by
+their censor indicators (\code{all=TRUE}).
 }
 \arguments{
 \item{file}{Name of the file to read}
@@ -13,21 +20,18 @@ used unchanged.}
 \item{all}{If TRUE, all times have accompanying censor indicators;
 otherwise, only the last one does.}
 }
-\description{
-\code{read.surv} reads sets of lines of data from a file. Each set may
-contain a series of duration times followed by a censor indicator for
-the last value (all=FALSE) or a series of pairs of times followed by
-their censor indicators (all=TRUE).
-}
 \value{
-A list containing a list of vectors containing the series of times
-and a vector of censor indicators for the last time of each series is
-returned.
+A list containing a list of vectors with the series of times and a
+vector of censor indicators for the last time of each series is returned.
 }
 \author{J.K. Lindsey}
 \seealso{
-\code{\link{read.list}}, \code{\link{restovec}}, \code{\link{rmna}}.
+\code{\link[rmutil]{lvna}}, \code{\link[rmutil]{read.list}},
+\code{\link[rmutil]{read.rep}}, \code{\link[rmutil]{restovec}},
+\code{\link[rmutil]{rmna}}
 }
 \examples{
-y <- read.surv("test.dat")
+\dontrun{y <- read.surv("test.dat")}
 }
+\keyword{file}
+

@@ -1,5 +1,26 @@
 Package: rmutil
-Version: 0.5
-Author: Jim Lindsey (jlindsey@luc.ac.be)
-Description: Tools for repeated measurements
-Licence: GPL version 2 or later
+Version: 1.1.0
+Title: Utilities for Nonlinear Regression and Repeated Measurements
+        Models
+Authors@R: c(
+    person("Bruce", "Swihart", email="bruce.swihart@gmail.com", role=c("cre", "aut")),
+    person("Jim"  , "Lindsey", email="jlindsey@gen.unimaas.nl", role="aut", comment="Jim created this package, Bruce is maintaining the CRAN version"))
+Depends: R (>= 1.4)
+Description: A toolkit of functions for nonlinear regression and repeated
+    measurements not to be used by itself but called by other Lindsey packages such
+    as 'gnlm', 'stable', 'growth', 'repeated', and 'event' 
+    (available at <http://www.commanster.eu/rcode.html>).
+License: GPL-2
+URL: http://www.commanster.eu/rcode.html
+BugReports: https:/github.com/swihart/rmutil/issues
+Encoding: UTF-8
+LazyData: true
+LazyLoad: true
+NeedsCompilation: yes
+Packaged: 2016-11-24 16:56:21 UTC; swihartbj
+Author: Bruce Swihart [cre, aut],
+  Jim Lindsey [aut] (Jim created this package, Bruce is maintaining the
+    CRAN version)
+Maintainer: Bruce Swihart <bruce.swihart@gmail.com>
+Repository: CRAN
+Date/Publication: 2016-11-25 08:43:08

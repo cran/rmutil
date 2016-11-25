@@ -1,0 +1,128 @@
+useDynLib("rmutil")
+
+  importFrom("graphics", "lines", "par", "plot", "points")
+  importFrom("stats", "as.formula", "deriv", "dgamma", "dnorm",
+             "dweibull", "fitted", "model.frame", "model.matrix",
+             "model.response", "nobs", "pgamma", "pnorm", "pweibull", "qgamma",
+             "qnbinom", "qnorm", "qweibull", "residuals", "runif",
+             "terms", "uniroot")
+  importFrom("utils", "read.table")
+
+S3method(as.data.frame, repeated) 
+S3method(as.data.frame, response)
+S3method(as.data.frame, tccov   )
+S3method(as.data.frame, tvcov   )
+S3method(as.matrix,     repeated)
+S3method(as.matrix,     response) 
+S3method(as.matrix,     tccov   )
+S3method(as.matrix,     tvcov   )
+S3method(coef,          gnlm    )
+S3method(covariates,    formulafn) 
+S3method(covariates,    repeated) 
+S3method(covariates,    tccov)
+S3method(covariates,    tvcov) 
+S3method(covind,        default) 
+S3method(delta,         repeated) 
+S3method(delta,         response)
+S3method(description,   default) 
+S3method(description,   repeated) 
+S3method(deviance,      gnlm)
+S3method(df.residual,   gnlm) 
+S3method(finterp,       data.frame) 
+S3method(finterp,       default) 
+S3method(finterp,       repeated)
+S3method(finterp,       tccov) 
+S3method(finterp,       tvcov) 
+S3method(fnenvir,       data.frame) 
+S3method(fnenvir,       default)
+S3method(fnenvir,       repeated) 
+S3method(fnenvir,       tccov) 
+S3method(fnenvir,       tvcov) 
+S3method(formula,       formulafn)
+S3method(formula,       repeated) 
+S3method(formula,       tccov) 
+S3method(iprofile,      default) 
+S3method(model,         formulafn)
+S3method(mprofile,      default) 
+S3method(names,         repeated) 
+S3method(names,         response) 
+S3method(names,         tccov)
+S3method(names,         tvcov) 
+S3method(nesting,       repeated) 
+S3method(nesting,       response) 
+S3method(nobs,          data.frame)
+S3method(nobs,          default) 
+S3method(nobs,          response) 
+S3method(nobs,          tvcov) 
+S3method(parameters,    formulafn)
+S3method(plot,          iprofile) 
+S3method(plot,          mprofile) 
+S3method(plot,          repeated) 
+S3method(plot,          residuals)
+S3method(plot,          response) 
+S3method(print,         fmobj) 
+S3method(print,         formulafn) 
+S3method(print,         gnlm) 
+S3method(print,         repeated)
+S3method(print,         response) 
+S3method(print,         tccov) 
+S3method(print,         tvcov) 
+S3method(response,      repeated)
+S3method(response,      response) 
+S3method(resptype,      repeated) 
+S3method(resptype,      response) 
+S3method(times,         default)
+S3method(times,         response) 
+S3method(transform,     repeated) 
+S3method(transform,     response) 
+S3method(transform,     tccov)
+S3method(transform,     tvcov) 
+S3method(units,         default) 
+S3method(units,         repeated) 
+S3method(vcov,          gnlm) 
+S3method(weights,       gnlm)
+S3method(weights,       repeated) 
+S3method(weights,       response)
+
+export(as.data.frame.response,as.data.frame.tccov,as.data.frame.tvcov,as.data.frame.repeated,
+as.matrix.response,as.matrix.tccov,as.matrix.tvcov,as.matrix.repeated,
+capply,contr.mean,
+covariates,covariates.formulafn,covariates.tccov,covariates.tvcov,covariates.repeated,
+covind,covind.default,
+dbetabinom,dboxcox,dburr,dconsul,ddoublebinom,ddoublepois,dgammacount,dgextval,dggamma,dginvgauss,dglogis,dgweibull,dhjorth,dinvgauss,dlaplace,dlevy,dmultbinom,dmultpois,dpareto,dpowexp,dpvfpois,dsimplex,dskewlaplace,dtwosidedpower,
+delta,delta.response,delta.repeated,
+description,description.default,description.repeated,
+dftorep,
+finterp,finterp.data.frame,finterp.default,finterp.repeated,finterp.tccov,finterp.tvcov,
+fmobj,print.fmobj,print.formulafn,
+fnenvir,fnenvir.default,fnenvir.data.frame,fnenvir.tccov,fnenvir.tvcov,fnenvir.repeated,
+formula.formulafn,formula.tccov,formula.repeated,
+gauss.hermite,gettvc,
+weights.gnlm,df.residual.gnlm,deviance.gnlm,coef.gnlm,vcov.gnlm,print.gnlm,
+int,int2,
+iprofile,iprofile.default,plot.iprofile,
+lin.diff.eqn,lvna,mexp,
+model, model.formulafn,covariates.formulafn,
+mprofile,mprofile.default,plot.mprofile,
+names.response,names.tccov,names.tvcov,names.repeated,
+nesting,nesting.response,nesting.repeated,
+nobs,nobs.default,nobs.response,nobs.tvcov,nobs.data.frame,
+parameters,parameters.formulafn,
+pbetabinom,pboxcox,pburr,pconsul,pdoublebinom,pdoublepois,pgammacount,pgextval,pggamma,pginvgauss,pglogis,pgweibull,phjorth,pinvgauss,plaplace,plevy,pmultbinom,pmultpois,ppareto,ppowexp,ppvfpois,psimplex,pskewlaplace,ptwosidedpower,
+plot.residuals,plot.response,plot.repeated,
+print.response,print.tccov,print.tvcov,print.repeated,
+qbetabinom,qboxcox,qburr,qconsul,qdoublebinom,qdoublepois,qgammacount,qgextval,qggamma,qginvgauss,qglogis,qgweibull,qhjorth,qinvgauss,qlaplace,qlevy,qmultbinom,qmultpois,qpareto,qpowexp,qpvfpois,qsimplex,qskewlaplace,qtwosidedpower,
+rbetabinom,rboxcox,rburr,rconsul,rdoublebinom,rdoublepois,rgammacount,rgextval,rggamma,rginvgauss,rglogis,rgweibull,rhjorth,rinvgauss,rlaplace,rlevy,rmultbinom,rmultpois,rpareto,rpowexp,rpvfpois,rsimplex,rskewlaplace,rtwosidedpower,
+read.list,read.rep,read.surv,
+response,response.response,response.repeated,
+resptype,resptype.response,resptype.repeated,
+restovec,rmna,runge.kutta,tcctomat,
+times,times.default,times.response,
+transform.response,transform.repeated,transform.tccov,transform.tvcov,
+tvctomat,wr,
+units.default,units.repeated,
+weights.response,weights.repeated)
+
+
+
+

@@ -1,18 +1,18 @@
 #
 #  rmutil : A Library of Special Functions for Repeated Measurements
-#  Copyright (C) 1998 J.K. Lindsey
+#  Copyright (C) 1998, 1999, 2000, 2001 J.K. Lindsey
 #
 #  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
+#  it under the terms of the GNU General Public Licence as published by
+#  the Free Software Foundation; either version 2 of the Licence, or
 #  (at your option) any later version.
 #
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+#  GNU General Public Licence for more details.
 #
-#  You should have received a copy of the GNU General Public License
+#  You should have received a copy of the GNU General Public Licence
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
@@ -28,29 +28,54 @@
 
 gettvc <- function(response, times=NULL, tvcov=NULL, tvctimes=NULL,
 	oldtvcov=NULL, ties=TRUE){
-if(is.list(response)&&inherits(response,"response"))zr <- response
-else zr <- restovec(response,times)
-if(any(is.na(zr$y)))stop("NAs in response; matching cannot be done")
+#
+# if necessary, make into response object and remove NAs
+#
+if(inherits(response,"response"))izr <- response
+else izr <- restovec(response,times)
+if(any(is.na(izr$y))){
+	isna <- TRUE
+	nna <- length(izr$y)
+	tmp <- NULL
+	rna <- !is.na(izr$y)
+	irna <- (1:nna)*rna
+	j <- c(0,cumsum(nobs(izr)))
+	for(i in 1:length(nobs(izr)))tmp <- c(tmp,sum(rna[(j[i]+1):j[i+1]]))
+	zr <- list()
+	zr$nobs <- tmp
+	zr$times <- izr$times[rna]
+	zr$y <- izr$y[rna]
+	class(zr) <- "response"}
+else {
+	isna <- FALSE
+	zr <- izr}
+#
+# remove NAs from time-varying covariate
+#
 zt <- restovec(tvcov,tvctimes)
 if(any(is.na(zt$y))){
 	tmp <- NULL
 	rna <- !is.na(zt$y)
-	j <- c(0,cumsum(zt$nobs))
-	for(i in 1:length(zt$nobs))tmp <- c(tmp,sum(rna[(j[i]+1):j[i+1]]))
+	j <- c(0,cumsum(nobs(zt)))
+	for(i in 1:length(nobs(zt)))tmp <- c(tmp,sum(rna[(j[i]+1):j[i+1]]))
 	zt$nobs <- tmp
 	zt$times <- zt$times[rna]
 	zt$y <- zt$y[rna]}
-if(length(zr$nobs)!=length(zt$nobs))stop("response and covariate do not have the same number of individuals")
-nind <- length(zr$nobs)
-nld <- max(c(zr$nobs,zt$nobs))
+if(length(nobs(izr))!=length(nobs(zt)))
+	stop("response and covariate do not have the same number of individuals")
+#
+# obtain new aligned times
+#
+nind <- length(nobs(zr))
+nld <- max(c(nobs(zr),nobs(zt)))
 z2 <- .Fortran("gettvc",
 	x=as.double(zr$times),
 	y=as.double(zr$y),
 	xtvc=as.double(zt$times),
 	tvcov=as.double(zt$y),
-	nobs=as.integer(zr$nobs),
+	nobs=as.integer(nobs(zr)),
 	nind=as.integer(nind),
-	nknt=as.integer(zt$nobs),
+	nknt=as.integer(nobs(zt)),
 	ties=as.logical(ties),
 	xu=matrix(0,nrow=nind,ncol=2*nld),
 	ndelta=logical(2*nld*nind),
@@ -59,13 +84,20 @@ z2 <- .Fortran("gettvc",
 	wu=double(2*nld),
 	nld=as.integer(nld),
 	tvcov3=double(length(zr$y)),
-	DUP=F)
-tvcov3 <- z2$tvcov3
-z2 <- NULL
+	## DUP=FALSE,
+	PACKAGE="rmutil")
+if(isna){
+	tvcov3 <- rep(NA,nna)
+	tvcov3[irna] <- z2$tvcov3}
+else tvcov3 <- z2$tvcov3
+rm(z2)
+#
+# check if new covariate or to be combined with others
+#
 new <- missing(oldtvcov)
 if(!new&!is.list(oldtvcov)){
 	warning("oldtvcov must form a list - ignored")
-	new <- T}
+	new <- TRUE}
 cname <- paste(deparse(substitute(tvcov)))
 if(new)oldtvcov <- vector(mode="list",nind)
 else if(!inherits(oldtvcov,"tvcov")){
@@ -75,14 +107,21 @@ else if(!inherits(oldtvcov,"tvcov")){
 		cname <- c(colnames(oldtvcov[[1]]),cname)
 	else cname <- NULL}
 else if(inherits(oldtvcov,"tvcov"))cname <- c(colnames(oldtvcov$tvcov),cname)
-if(!inherits(oldtvcov,"tvcov")){
-	nm <- 0
-	for(i in 1:nind){
-		oldtvcov[[i]] <- cbind(oldtvcov[[i]],tvcov3[(nm+1):(nm+zr$nobs[i])])
-		nm <- nm+zr$nobs[i]}
-	if(!is.null(cname))colnames(oldtvcov[[1]]) <- cname
-	oldtvcov <- tvctomat(oldtvcov)}
-else {
+if(inherits(oldtvcov,"tvcov")){
+#
+# combine tvcov objects
+#
 	oldtvcov$tvcov <- cbind(oldtvcov$tvcov,tvcov3)
 	colnames(oldtvcov$tvcov) <- cname}
+else {
+#
+# create a new tvcov object
+#
+	nm <- 0
+	for(i in 1:nind){
+		oldtvcov[[i]] <- cbind(oldtvcov[[i]],tvcov3[(nm+1):
+			(nm+nobs(izr)[i])])
+		nm <- nm+nobs(izr)[i]
+		if(!is.null(cname))colnames(oldtvcov[[i]]) <- cname}
+	oldtvcov <- tvctomat(oldtvcov)}
 invisible(oldtvcov)}
