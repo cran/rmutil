@@ -68,7 +68,7 @@ if(length(nobs(izr))!=length(nobs(zt)))
 #
 nind <- length(nobs(zr))
 nld <- max(c(nobs(zr),nobs(zt)))
-z2 <- .Fortran("gettvc",
+z2 <- .Fortran("gettvc_f",
 	x=as.double(zr$times),
 	y=as.double(zr$y),
 	xtvc=as.double(zt$times),

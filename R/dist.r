@@ -279,7 +279,7 @@ if(length(m)!=len){
 if(length(s)!=len){
 	if(length(s)!=1)stop("s has incorrect length")
 	else s <- rep(s,len)}
-z <- .C("psimplex",
+z <- .C("psimplex_c",
 	as.double(q),
 	as.double(m),
 	as.double(s),
@@ -306,7 +306,7 @@ if(!log)tmp <- exp(tmp)
 tmp}
 
 qsimplex <- function(p, m, s){
-h <- function(y).C("psimplex",
+h <- function(y).C("psimplex_c",
 	as.double(y),
 	as.double(m[i]),
 	as.double(s[i]),
@@ -533,7 +533,7 @@ if(length(s)!=len){
 if(length(f)!=len){
 	if(length(f)!=1)stop("f has incorrect length")
 	else f <- rep(f,len)}
-z <- .C("pginvgauss",
+z <- .C("pginvgauss_c",
 	as.double(q),
 	as.double(m),
 	as.double(s),
@@ -560,7 +560,7 @@ if(!log)tmp <- exp(tmp)
 tmp}
 
 qginvgauss <- function(p, m, s, f){
-h <- function(y).C("pginvgauss",
+h <- function(y).C("pginvgauss_c",
 	as.double(y),
 	as.double(m[i]),
 	as.double(s[i]),
@@ -717,7 +717,7 @@ if(length(s)!=len){
 if(length(f)!=len){
 	if(length(f)!=1)stop("f has incorrect length")
 	else f <- rep(f,len)}
-z <- .C("ppowexp",
+z <- .C("ppowexp_c",
 	as.double(q),
 	as.double(m),
 	as.double(s),
@@ -746,7 +746,7 @@ tmp}
 
 qpowexp <- function(p, m=0, s=1, f=1){
 h <- function(y) {
-	z <- .C("ppowexp",
+	z <- .C("ppowexp_c",
 	        as.double(y),
 	        as.double(m[i]),
 	        as.double(s[i]),

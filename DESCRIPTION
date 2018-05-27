@@ -1,5 +1,5 @@
 Package: rmutil
-Version: 1.1.0
+Version: 1.1.1
 Title: Utilities for Nonlinear Regression and Repeated Measurements
         Models
 Authors@R: c(
@@ -12,15 +12,15 @@ Description: A toolkit of functions for nonlinear regression and repeated
     (available at <http://www.commanster.eu/rcode.html>).
 License: GPL-2
 URL: http://www.commanster.eu/rcode.html
-BugReports: https:/github.com/swihart/rmutil/issues
+BugReports: https://github.com/swihart/rmutil/issues
 Encoding: UTF-8
 LazyData: true
 LazyLoad: true
 NeedsCompilation: yes
-Packaged: 2016-11-24 16:56:21 UTC; swihartbj
+Packaged: 2018-05-27 02:57:01 UTC; swihartbj
 Author: Bruce Swihart [cre, aut],
   Jim Lindsey [aut] (Jim created this package, Bruce is maintaining the
     CRAN version)
 Maintainer: Bruce Swihart <bruce.swihart@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-11-25 08:43:08
+Date/Publication: 2018-05-27 13:55:48 UTC

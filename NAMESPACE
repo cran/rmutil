@@ -1,4 +1,4 @@
-useDynLib("rmutil")
+useDynLib("rmutil",.registration=TRUE)
 
   importFrom("graphics", "lines", "par", "plot", "points")
   importFrom("stats", "as.formula", "deriv", "dgamma", "dnorm",
@@ -84,7 +84,7 @@ S3method(weights,       gnlm)
 S3method(weights,       repeated) 
 S3method(weights,       response)
 
-export(as.data.frame.response,as.data.frame.tccov,as.data.frame.tvcov,as.data.frame.repeated,
+export(as.data.frame, as.data.frame.response,as.data.frame.tccov,as.data.frame.tvcov,as.data.frame.repeated,
 as.matrix.response,as.matrix.tccov,as.matrix.tvcov,as.matrix.repeated,
 capply,contr.mean,
 covariates,covariates.formulafn,covariates.tccov,covariates.tvcov,covariates.repeated,
@@ -120,7 +120,7 @@ restovec,rmna,runge.kutta,tcctomat,
 times,times.default,times.response,
 transform.response,transform.repeated,transform.tccov,transform.tvcov,
 tvctomat,wr,
-units.default,units.repeated,
+units,units.default,units.repeated,
 weights.response,weights.repeated)
 
 

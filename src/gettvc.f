@@ -18,7 +18,7 @@ c  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 c
 c  SYNOPSIS
 c
-c    subroutine gettvc(x,y,xtvc,tvcov,nobs,nind,nknt,ties,
+c    subroutine gettvc_f(x,y,xtvc,tvcov,nobs,nind,nknt,ties,
 c   +     xu,ndelta,tvcov2,nu,wu,nld,tvcov3)
 c
 c  DESCRIPTION
@@ -27,7 +27,7 @@ c    Function to find the most recent value of a time-varying
 c covariate not recorded at the same time as the response.
 c
 c
-      subroutine gettvc(x,y,xtvc,tvcov,nobs,nind,nknt,ties,
+      subroutine gettvc_f(x,y,xtvc,tvcov,nobs,nind,nknt,ties,
      +     xu,ndelta,tvcov2,nu,wu,nld,tvcov3)
 c
 c Merge and sort x and xtvc, putting the result, of length nu,

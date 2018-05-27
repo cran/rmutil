@@ -318,6 +318,6 @@ as.data.frame(reps)
 #
 # use in glm
 rm(y,x,z)
-glm(y~x+z, data=reps)
+glm(y~x+z, data=as.data.frame(reps))
 }
 \keyword{manip}

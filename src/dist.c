@@ -35,11 +35,11 @@
  * void dmb(int y[], int n[], double m[], double s[], int *nn,
  *	 double wt[], double res[])
  *
- * void psimplex(double y[], double m[], double s[], double f[], int *len,
+ * void psimplex_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
- * void pginvgauss(double y[], double m[], double s[], double f[], int *len,
+ * void pginvgauss_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
- * void ppowexp(double y[], double m[], double s[], double f[], int *len,
+ * void ppowexp_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
  *
  *  DESCRIPTION
@@ -319,7 +319,7 @@ static void dsimplex(double y[], double m[], double s[], double f[], int len,
   int i;
   for(i=0;i<len;i++)res[i]=exp(-pow((y[i]-m[i])/(m[i]*(1-m[i])),2)/(2*y[i]*(1-y[i])*s[i]))/sqrt(2*M_PI*s[i]*pow(y[i]*(1-y[i]),3));}
 
-void psimplex(double y[], double m[], double s[], double f[], int *len,
+void psimplex_c(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
   double *x;
   int i;
@@ -333,7 +333,7 @@ static void dginvgauss(double y[], double m[], double s[], double f[], int len,
   int i;
   for(i=0;i<len;i++)res[i]=pow(y[i],f[i]-1)*exp(-(1./y[i]+y[i]/pow(m[i],2))/(2.*s[i]))/(pow(m[i],f[i])*(2.*bessel_k(1/(s[i]*m[i]),fabs(f[i]),1.0)));}
 
-void pginvgauss(double y[], double m[], double s[], double f[], int *len,
+void pginvgauss_c(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
   double *x;
   int i;
@@ -351,7 +351,7 @@ static void dpowexp(double y[], double m[], double s[], double f[], int len,
     b=1.+1./(2.*f[i]);
     res[i]=exp(-pow(fabs(y[i]-m[i])/ss,2.*f[i])/2.)/(ss*gammafn(b)*pow(2.,b));}}
 
-void ppowexp(double y[], double m[], double s[], double f[], int *len,
+void ppowexp_c(double y[], double m[], double s[], double f[], int *len,
 	   double *eps, int *pts, int *max, int *err, double res[]){
   double *x;
   int i;

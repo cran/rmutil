@@ -35,11 +35,11 @@
  * void dmb(int y[], int n[], double m[], double s[], int *nn,
  *	 double wt[], double res[])
  *
- * void psimplex(double y[], double m[], double s[], double f[], int *len,
+ * void psimplex_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
- * void pginvgauss(double y[], double m[], double s[], double f[], int *len,
+ * void pginvgauss_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
- * void ppowexp(double y[], double m[], double s[], double f[], int *len,
+ * void ppowexp_c(double y[], double m[], double s[], double f[], int *len,
  *	   double *eps, int *pts, int *max, int *err, double res[])
  *
  *  DESCRIPTION
@@ -70,9 +70,9 @@ void pmb(int q[], int n[], double m[], double s[], int *nn, double res[]);
 void dmb(int y[], int n[], double m[], double s[], int *nn,
 	 double wt[], double res[]);
 
-void psimplex(double y[], double m[], double s[], double f[], int *len,
+void psimplex_c(double y[], double m[], double s[], double f[], int *len,
 	 double *eps, int *pts, int *max, int *err, double res[]);
-void pginvgauss(double y[], double m[], double s[], double f[], int *len,
+void pginvgauss_c(double y[], double m[], double s[], double f[], int *len,
 	 double *eps, int *pts, int *max, int *err, double res[]);
-void ppowexp(double y[], double m[], double s[], double f[], int *len,
+void ppowexp_c(double y[], double m[], double s[], double f[], int *len,
 	 double *eps, int *pts, int *max, int *err, double res[]);

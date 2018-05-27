@@ -215,7 +215,7 @@ int1 <- function(ff, aa, bb){
 romberg <- function(f, a=-Inf, b=Inf){
 	# invert function for infinite limits
         ff <- function(x) f(1/x)/(x*x)
-        if(b==Inf){
+        if(all(b==Inf)){
         	if(all(a==-Inf))
         	# both limits infinite
         		z <- int1(ff,rep(-1,len),rep(0,len))+
