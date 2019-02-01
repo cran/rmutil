@@ -817,7 +817,7 @@ ifelse(q<0.5,f*s*log((1+f^2)*q/f^2)+m,-s*log((1+f^2)*(1-q))/f+m)}
 ### beta-binomial distribution
 ###
 pbetabinom <- function(q, size, m, s){
-if(any(q<0))stop("q must contain non-negative values")
+if(any(q<0)){message("Negative values of q replaced with 0"); q[q<0] <- 0}
 if(any(size<0))stop("size must contain non-negative values")
 if(any(m<=0)||any(m>=1))stop("m must lie between 0 and 1")
 if(any(s<=0))stop("s must be positive")
@@ -828,7 +828,7 @@ if(length(q)!=len){
 if(length(size)!=len){
 	if(length(size)==1)size <- rep(size,len)
 	else stop("size must be the same length as q")}
-if(any(q>size))stop("q must be <= size")
+if(any(q>size)){message("Elements of q that were greater than size were set equal to size"); q[q>size] <- size[q>size]}
 if(length(m)!=len){
 	if(length(m)==1)m <- rep(m,len)
 	else stop("m and q must have the same length")}
@@ -845,7 +845,7 @@ for(i in 1:length(q)){
 res}
 
 dbetabinom <- function(y, size, m, s, log=FALSE){
-if(any(y<0))stop("y must contain non-negative values")
+if(any(y<0)){message("Negative values of y replaced with -1 to yield 0 value density"); y[y<0]<- -1}
 if(any(size<0))stop("size must contain non-negative values")
 if(any(m<=0)||any(m>=1))stop("m must lie between 0 and 1")
 if(any(s<=0))stop("s must be positive")
@@ -856,7 +856,7 @@ if(length(y)!=ly){
 if(length(size)!=ly){
 	if(length(size)==1)size <- rep(size,ly)
 	else stop("size must be the same length as y")}
-if(any(y>size))stop("y must be <= size")
+if(any(y>size)){message("Elements of y exist that are greater than size");}
 if(length(m)!=ly){
 	if(length(m)==1)m <- rep(m,ly)
 	else stop("m and y must have the same length")}

@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------------
+version 1.1.2
+------------------------------------------------------------------------------
+
+  * Implemented https://github.com/swihart/rmutil/issues/5 (Thanks @hennerw!) 
+    where values below the support will give 0 and values above support give 1
+    for pbetabinom and dbetabinom.  Let me know if other functions need this
+    functionality -- I'd be happy to update.
+
+------------------------------------------------------------------------------
 version 1.1.1
 ------------------------------------------------------------------------------
 
