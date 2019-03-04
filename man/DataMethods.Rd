@@ -24,7 +24,9 @@ times(z, ...)
 \method{transform}{response}(`_data`, times=NULL, units=NULL, ...)
 \method{transform}{repeated}(`_data`, times=NULL, ...)
 units(x, ...)
-weights(object, ...)
+\method{weights}{gnlm}(object, ...)
+\method{weights}{repeated}(object, nind=NULL, ...)
+\method{weights}{response}(object, nind=NULL, ...)
 }
 \alias{DataMethods}
 \alias{as.data.frame}

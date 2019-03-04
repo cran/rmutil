@@ -1,4 +1,17 @@
 ------------------------------------------------------------------------------
+version 1.1.3
+------------------------------------------------------------------------------
+
+  * Implemented better fixes for https://github.com/swihart/rmutil/issues/5 
+    (Thanks @hennerw!) where values below the support will give 0 and values 
+    above support give 1 for pbetabinom and dbetabinom as the last fix in 
+    1.1.2 could give erroneous results.  
+    Let me know if other functions need this
+    functionality -- I'd be happy to update.
+  * Removed local generic `weights` as per personal communication from 
+    K Hornik
+
+------------------------------------------------------------------------------
 version 1.1.2
 ------------------------------------------------------------------------------
 

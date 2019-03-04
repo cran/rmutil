@@ -5,7 +5,7 @@ useDynLib("rmutil",.registration=TRUE)
              "dweibull", "fitted", "model.frame", "model.matrix",
              "model.response", "nobs", "pgamma", "pnorm", "pweibull", "qgamma",
              "qnbinom", "qnorm", "qweibull", "residuals", "runif",
-             "terms", "uniroot")
+             "terms", "uniroot", "weights")
   importFrom("utils", "read.table")
 
 S3method(as.data.frame, repeated) 

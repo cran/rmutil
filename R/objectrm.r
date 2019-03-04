@@ -2010,7 +2010,7 @@ z$response$delta[nind,col]}
 
 ### methods to find weights
 ###
-weights <- function(object, ...) UseMethod("weights")
+#weights <- function(object, ...) UseMethod("weights")
 
 weights.response <- function(object, nind=NULL, ...){
 if(is.null(nind)||is.null(object$wt))return(object$wt)

@@ -817,7 +817,26 @@ ifelse(q<0.5,f*s*log((1+f^2)*q/f^2)+m,-s*log((1+f^2)*(1-q))/f+m)}
 ### beta-binomial distribution
 ###
 pbetabinom <- function(q, size, m, s){
-if(any(q<0)){message("Negative values of q replaced with 0"); q[q<0] <- 0}
+##BEGIN from @hennerw in issue #5  
+  # if (any(q > size)){
+  #   # Updating to correctly deal with this siduation
+  #   # stop("q must be <= size")
+  #   if(all(q>size)) return(rep(1,len))
+  #   Val <- q<= size
+  #   out <- rep(1,len)
+  #   out[Val] <- pbetabinom_c(q[Val],size[Val],m[Val],s[Val])
+  #   return(out)
+  # }
+  # if (any(q < 0)){
+  #   # stop("q must contain non-negative values")
+  #   if(all(q < 0)) return(rep(0,len))
+  #   Val <- q>=0
+  #   out <- rep(0,len)
+  #   out[Val] <- pbetabinom_c(q[Val],size[Val],m[Val],s[Val])
+  #   return(out)
+  # }
+##END from @hennerw in issue #5
+if(any(q<0)){message("Negative values of q detected.  `pbetabinom` returns 0 for such values.")}#; q[q<0] <- 0}
 if(any(size<0))stop("size must contain non-negative values")
 if(any(m<=0)||any(m>=1))stop("m must lie between 0 and 1")
 if(any(s<=0))stop("s must be positive")
@@ -828,7 +847,7 @@ if(length(q)!=len){
 if(length(size)!=len){
 	if(length(size)==1)size <- rep(size,len)
 	else stop("size must be the same length as q")}
-if(any(q>size)){message("Elements of q that were greater than size were set equal to size"); q[q>size] <- size[q>size]}
+if(any(q>size)){message("Elements of q that were greater than size detected. `pbetabinom` returns 1 for such values.")}#; q[q>size] <- size[q>size]}
 if(length(m)!=len){
 	if(length(m)==1)m <- rep(m,len)
 	else stop("m and q must have the same length")}
@@ -839,9 +858,14 @@ t <- s*m
 u <- s*(1-m)
 res <- vector("numeric",length(q))
 for(i in 1:length(q)){
-	qq <- 0:q[i]
-	res[i] <- sum(exp(lbeta(qq+t[i],size[i]-qq+u[i])-
-		lbeta(t[i],u[i])+lchoose(size[i],qq)))}
+  if(q[i] < 0){ res[i] <- 0
+  } else if(q[i]>size[i]){ res[i] <- 1
+  }else{
+    qq <- 0:q[i]
+    res[i] <- sum(exp(lbeta(qq+t[i],size[i]-qq+u[i])-
+                        lbeta(t[i],u[i])+lchoose(size[i],qq)))
+  }
+}
 res}
 
 dbetabinom <- function(y, size, m, s, log=FALSE){
