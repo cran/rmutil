@@ -1,6 +1,6 @@
-fc91a0f776ef4a6ba8bed3ac072d27a8 *DESCRIPTION
+e4666da38900062e9433b0f2e568951a *DESCRIPTION
 29cd42a85b992bbc8211a7ff776f231f *NAMESPACE
-d86323e6733a8e3526b053f083e3f18c *NEWS.md
+54fa15394107fd7bfd2599ee985a39b3 *NEWS.md
 ef0aa598b93ec9ec9a1a052b1369772f *R/contrast.r
 3701eac8a5cfcacc7d9d07455d64a8c3 *R/diffeqn.r
 03a46a75c9e75b0725f07789e4f37d2a *R/dist.r
@@ -8,7 +8,7 @@ bc5775ade6402b2ef8d00951a4891d69 *R/finterp.r
 0e8c28235c9ef20c9bb436f335635b6f *R/gettvc.r
 b28fe0b04d36b9f80d76fce6565c39d4 *R/ghermite.r
 f3a59afef6cb410f6aef563b0406907a *R/int.r
-53dd7cdf7b589fb06ad844db450765ee *R/objectrm.r
+c48a2502eb9f851d7c0c247ca781f94b *R/objectrm.r
 645933ae72f085ae09623eba272e62ad *R/pkpd.r
 6c634198c7ff53bf3c4a428454a6c697 *R/plotrm.r
 f64fcab6402964ac77645451e6ebad8f *R/printrm.r
@@ -66,7 +66,7 @@ d1cb160e2c6001e26cbefcff34cc4b47 *man/rmna.Rd
 495949bfeb87f04142b1adf38081fc72 *man/rmutil.Rd
 41901cbbe92a49fe542c09aad1e530db *man/runge.kutta.Rd
 a6b3deb9ea94d3abb128c82c9df3cbce *man/tcctomat.Rd
-e4e819a79e03ad03c5fa1568ec9f7f4b *man/tvctomat.Rd
+db3b7e8ef3c5997a10b38a4b721c3565 *man/tvctomat.Rd
 3b3106c6e547062237134de1f740b692 *man/wr.Rd
 56be3da0a27ad554ac2b456af1cd58c9 *src/cutil.c
 15ac46f9eb7808b19180ad5ece8f2991 *src/dist.c

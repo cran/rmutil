@@ -934,7 +934,7 @@ if(is.data.frame(tvcov)){
 	if(dataframe){
 	# make new one-column dataframe
 		nbs <- rep(dim(tvcov)[2],dim(tvcov)[1])
-		tvcv <- as.data.frame(as.vector(t(as.matrix(tvcov))))
+		tvcv <- data.frame(as.character(as.vector(t(as.matrix(tvcov)))),stringsAsFactors=TRUE)##tvcv <- as.data.frame(as.vector(t(as.matrix(tvcov))))
 		colnames(tvcv) <- names}
 	# if factors, as.matrix transforms to character for next step
 	else tvcov <- as.matrix(tvcov)}
@@ -1153,7 +1153,7 @@ if(!is.null(description)){
 		if(is.null(units))units <- rep(NA,dim(tvcv)[2])
 		oldtvcov$units <- c(oldtvcov$units,units)}
 	if((dim(oldtvcov$tvcov)[1]==dim(tvcv)[1])&&all(oldtvcov$nobs==nbs)){
-		if(dataframe)oldtvcov$tvcov <- data.frame(oldtvcov$tvcov,tvcv)
+		if(dataframe)oldtvcov$tvcov <- data.frame(oldtvcov$tvcov,tvcv,stringsAsFactors = TRUE)
 		else oldtvcov$tvcov <- cbind(oldtvcov$tvcov,tvcv)}
 	else stop("old and new covariates do not have the same numbers of observations")}
 else {
