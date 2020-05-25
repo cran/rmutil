@@ -280,7 +280,7 @@ static void romberg2(void fcn(), double *a, double *b, int len,
 		    int pts, int max, int *err, double sumlen[])
 {
   int i,j,j1,finish;
-  double errsum,*tab1,*tab2,*x,*fx,*sum,*tmpsum,*zz,*pnt1,*pnt2,*y;
+  double errsum=0.,*tab1,*tab2,*x,*fx,*sum,*tmpsum,*zz,*pnt1,*pnt2,*y;
 
   x=(double*)R_alloc((size_t)(max*len),sizeof(double));
   fx=(double*)R_alloc((size_t)(max*len),sizeof(double));
