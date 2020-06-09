@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------------
+version 1.1.5
+------------------------------------------------------------------------------
+
+  * Fixed Issue https://github.com/swihart/rmutil/issues/10 -- updated BetaBinomial 
+  help documentation to relate `m` and `s` to the standard/traditional `alpha` and `beta`
+  parameterization.  Thanks to  @sjenkins20 on github for the suggestion!
+  * Fixed Issue https://github.com/swihart/rmutil/issues/9 -- Condition has length > 1 and only the first element will be used warning in `int`. Thank you @ellessenne on github for chasing this one down.
+
+------------------------------------------------------------------------------
 version 1.1.4
 ------------------------------------------------------------------------------
 

@@ -14,6 +14,9 @@ rbetabinom(n, size, m, s)
 These functions provide information about the beta binomial
 distribution with parameters \code{m} and \code{s}: density,
 cumulative distribution, quantiles, and random generation.
+Compared to the parameterization of `VGAM::pbetabinom.ab`,
+\code{m = alpha/(alpha+beta)} and \code{s = (alpha+beta)}.
+See examples.
 
 The beta binomial distribution with total \eqn{= n} and
 \code{prob} \eqn{= m} has density
@@ -27,8 +30,9 @@ for \eqn{y = 0, \ldots, n} where \eqn{B()} is the beta function.}
 \item{p}{vector of probabilities}
 \item{n}{number of values to generate}
 \item{size}{vector of totals}
-\item{m}{vector of probabilities of success}
-\item{s}{vector of overdispersion parameters}
+\item{m}{vector of probabilities of success; Compared to the parameterization of `VGAM::pbetabinom.ab`,
+\code{m = alpha/(alpha+beta)} where \code{shape1=alpha} and \code{shape2=beta}. See examples.}
+\item{s}{vector of overdispersion parameters; Compared to the parameterization of `VGAM::pbetabinom.ab`, \code{s = (alpha+beta)} where \code{shape1=alpha} and \code{shape2=beta}. See examples.}
 \item{log}{if TRUE, log probabilities are supplied.}
 }
 \author{J.K. Lindsey}
@@ -44,5 +48,34 @@ pbetabinom(54,100,0.5,1.1)-pbetabinom(45,100,0.5,1.1)
 pbetabinom(2,10,0.5,1.1)
 qbetabinom(0.33,10,0.5,1.1)
 rbetabinom(10,10,0.5,1.1)
+## compare to VGAM
+\dontrun{
+# The beta binomial distribution with total = n and prob = m has density
+# 
+# p(y) = B(y+s m,n-y+s (1-m)) Choose(n,y) / B(s m,s (1-m))
+# 
+# for y = 0, …, n where B() is the beta function.
+
+## in `rmutil` from the .Rd file (excerpt above), the "alpha" is s*m
+## in `rmutil` from the .Rd file (excerpt above), the "beta"  is s*(1-m)
+
+## in `VGAM`, rho is 1/(1+alpha+beta)
+
+qq = 2.2
+zz = 100
+
+alpha = 1.1
+beta  = 2
+VGAM::pbetabinom.ab(q=qq, size=zz, shape1=alpha, shape2=beta)
+
+## for VGAM `rho`
+rr = 1/(1+alpha+beta)
+VGAM::pbetabinom   (q=qq, size=zz, prob=mm, rho = rr)
+
+## for rmutil `m` and `s`:
+mm = alpha / (alpha+beta)
+ss = (alpha+beta)
+rmutil::pbetabinom(q=qq, size=zz, m=mm, s=ss )
+}
 }
 \keyword{distribution}

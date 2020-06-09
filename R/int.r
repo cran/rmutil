@@ -88,7 +88,7 @@ if(all(b!=Inf)&&length(b)!=len){
 if(type=="Romberg"){
 	# invert function for infinite limits
 	ff <- function(x) f(1/x)/(x*x)
-	if(b==Inf){
+	if(all(b==Inf)){
 		if(all(a==-Inf))
 		# both limits infinite
 			z <- int1(ff,rep(-1,len),rep(0,len))+
@@ -129,7 +129,7 @@ else {
 # TOMS614
 #
 	left <- a==-Inf&&b!=Inf
-	if(b==Inf){
+	if(all(b==Inf)){
 		if(all(a==-Inf)){
 		# both limits infinite
 			inf <- 1
