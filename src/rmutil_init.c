@@ -1,7 +1,7 @@
 #include <R_ext/RS.h>
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
-
+#include <Rinternals.h>
 /* FIXME: 
 Check these declarations against the C/Fortran source code.
 */
@@ -12,7 +12,7 @@ extern void ddp(void *, void *, void *, void *, void *, void *, void *);
 extern void dmb(void *, void *, void *, void *, void *, void *, void *);
 extern void dmp(void *, void *, void *, void *, void *, void *, void *);
 extern void dpvfp(void *, void *, void *, void *, void *, void *, void *);
-extern void inthp(void *, void *, void *, void *, void *, void *, void *, void *, void *);
+//extern void inthp(void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void pdb(void *, void *, void *, void *, void *, void *);
 extern void pdp(void *, void *, void *, void *, void *, void *);
 extern void pginvgauss_c(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
@@ -21,7 +21,7 @@ extern void pmp(void *, void *, void *, void *, void *, void *);
 extern void ppowexp_c(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void ppvfp(void *, void *, void *, void *, void *, void *);
 extern void psimplex_c(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-extern void romberg(void *, void *, void *, void *, void *, void *, void *, void *, void *);
+//extern void romberg(void *, void *, void *, void *, void *, void *, void *, void *, void *);
 
 /* .Fortran calls */
 extern void F77_NAME(gettvc_f)(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
@@ -32,7 +32,7 @@ static const R_CMethodDef CEntries[] = {
   {"dmb",          (DL_FUNC) &dmb,           7},
   {"dmp",          (DL_FUNC) &dmp,           7},
   {"dpvfp",        (DL_FUNC) &dpvfp,         7},
-  {"inthp",        (DL_FUNC) &inthp,         9},
+//  {"inthp",        (DL_FUNC) &inthp,         9},
   {"pdb",          (DL_FUNC) &pdb,           6},
   {"pdp",          (DL_FUNC) &pdp,           6},
   {"pginvgauss_c", (DL_FUNC) &pginvgauss_c, 10},
@@ -41,7 +41,22 @@ static const R_CMethodDef CEntries[] = {
   {"ppowexp_c",    (DL_FUNC) &ppowexp_c,    10},
   {"ppvfp",        (DL_FUNC) &ppvfp,         6},
   {"psimplex_c",   (DL_FUNC) &psimplex_c,   10},
-  {"romberg",      (DL_FUNC) &romberg,       9},
+//  {"romberg",      (DL_FUNC) &romberg,       9},
+  {NULL, NULL, 0}
+};
+
+/* .Call()  */
+//extern void romberg_sexp(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+//extern void   inthp_sexp(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+SEXP romberg_sexp(SEXP fcn, SEXP a, SEXP b, SEXP len, SEXP eps,
+                  SEXP pts, SEXP max, SEXP err, SEXP envir);
+SEXP inthp_sexp(SEXP a, SEXP b, SEXP d__, 
+                SEXP f, SEXP m, SEXP p, SEXP eps, SEXP inf, 
+                SEXP envir);
+
+static const R_CallMethodDef callMethods[]  = {
+  {"romberg_sexp", (DL_FUNC) &romberg_sexp, 9},
+  {"inthp_sexp", (DL_FUNC) &inthp_sexp, 9},
   {NULL, NULL, 0}
 };
 
@@ -52,6 +67,6 @@ static const R_FortranMethodDef FortranEntries[] = {
 
 void R_init_rmutil(DllInfo *dll)
 {
-  R_registerRoutines(dll, CEntries, NULL, FortranEntries, NULL);
+  R_registerRoutines(dll, CEntries, callMethods, FortranEntries, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }

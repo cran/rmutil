@@ -1,8 +1,8 @@
-/* toms614.f -- translated by f2c (version 19970805).
-   You must link the resulting object file with the libraries:
-	-lf2c -lm   (in that order)
-*/
-
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+#include <math.h>
+#include <stddef.h>
 #include "f2c.h"
 #include "R_ext/RS.h"
 
@@ -15,10 +15,18 @@ static doublereal c_b12 = 0.;
 /*     ALGORITHM APPEARED IN ACM-TRANS. MATH. SOFTWARE, VOL.10, NO. 2, */
 /*     JUN., 1984, P. 152-160. */
 /*<       SUBROUTINE INTHP(A, B, D, F, M, P, EPS, INF, QUADR)                >*/
-/* Subroutine */ int inthp(doublereal *a, doublereal *b, doublereal *d__, 
-	void *f, integer *m, doublereal *p, doublereal *eps, integer *inf, 
-	doublereal *quadr)
+/* Subroutine */ SEXP inthp_sexp(SEXP a, SEXP b, SEXP d__, 
+	SEXP f, SEXP m, SEXP p, SEXP eps, SEXP inf, 
+	SEXP envir)
 {
+  double *A = REAL(a);
+  double *B = REAL(b);
+  double *P = REAL(p);
+  double *EPS = REAL(eps);
+  double *D__ = REAL(d__);
+  int *M   = INTEGER(m);
+  int *INF = INTEGER(inf);
+  
     /* System generated locals */
     doublereal d__1;
 
@@ -36,12 +44,14 @@ static doublereal c_b12 = 0.;
     static logical inf1, inf2;
     static doublereal eps3, sum1, sum2;
 
-  static double *tmp;
-  static char *mode[1], *ss[1];
-  static long length[1];
-  static void *args[1];
+  //static double *tmp;
+  // static char *mode[1], *ss[1];
+  // static long length[1];
+  // static void *args[1];
   static double zz[1];
-
+  double quadr[1];
+  SEXP ans;
+  Rf_protect(ans = Rf_allocVector(REALSXP, 1));
 
 /*        THIS SUBROUTINE COMPUTES INTEGRAL OF FUNCTIONS WHICH */
 /*     MAY HAVE SINGULARITIES AT ONE OR BOTH END-POINTS OF AN */
@@ -274,10 +284,10 @@ static doublereal c_b12 = 0.;
 /*<    >*/
 /*<       double precision V2, W, W1, W2, W3, W4 >*/
 /*<       LOGICAL INF1, INF2 >*/
-
-  mode[0] = "double";
-  length[0] = 1;
-  args[0] = (void *)(zz);
+SEXP call2, result2, state2, tmp;
+  // mode[0] = "double";
+  // length[0] = 1;
+  // args[0] = (void *)(zz);
 
 /*<       PI = 4.*ATAN(1.0) >*/
     pi = atan(1.f) * 4.f;
@@ -285,32 +295,32 @@ static doublereal c_b12 = 0.;
 /*     CHECK THE INPUT DATA */
 
 /*<    >*/
-    if (*inf != 1 && *inf != 2 && *inf != 3 && *inf != 4) {
+    if (*INF != 1 && *INF != 2 && *INF != 3 && *INF != 4) {
 	goto L300;
     }
 /*<       IF (M.LT.3) GO TO 270 >*/
-    if (*m < 3) {
+    if (*M < 3) {
 	goto L270;
     }
 /*<       IF (P.LT.1. .AND. P.NE.0.) GO TO 280 >*/
-    if (*p < 1.f && *p != 0.f) {
+    if (*P < 1.f && *P != 0.f) {
 	goto L280;
     }
 /*<       IF (P.GE.1. .AND. (D.LE.0. .OR. D.GT.PI/2.)) GO TO 280 >*/
-    if (*p >= 1.f && (*d__ <= 0.f || *d__ > pi / 2.f)) {
+    if (*P >= 1.f && (*D__ <= 0.f || *D__ > pi / 2.f)) {
 	goto L280;
     }
 /*<       IF (INF.EQ.4 .AND. A.GE.B) GO TO 290 >*/
-    if (*inf == 4 && *a >= *b) {
+    if (*INF == 4 && *A >= *B) {
 	goto L290;
     }
 
 /*<       SQ2 = SQRT(2.0) >*/
     sq2 = sqrt(2.f);
 /*<       I1 = INF - 2 >*/
-    i1 = *inf - 2;
+    i1 = *INF - 2;
 /*<       BA = B - A >*/
-    ba = *b - *a;
+    ba = *B - *A;
 /*<       N1 = 0 >*/
     n1 = 0;
 
@@ -334,30 +344,30 @@ L10:
 /*<       U = U*10. >*/
     u *= 10.f;
 /*<       IF (EPS.LT.U) EPS = U >*/
-    if (*eps < u) {
-	*eps = u;
+    if (*EPS < u) {
+	*EPS = u;
     }
 
 /*<       IF (P.EQ.0.) GO TO 40 >*/
-    if (*p == 0.f) {
+    if (*P == 0.f) {
 	goto L40;
     }
 
 /*     SET UP DATA FOR THE DETERMINISTIC TERMINATION */
 
 /*<       IF (P.EQ.1.) ALFA = 1. >*/
-    if (*p == 1.f) {
+    if (*P == 1.f) {
 	alfa = 1.f;
     }
 /*<       IF (P.GT.1.) ALFA = (P-1.)/P >*/
-    if (*p > 1.f) {
-	alfa = (*p - 1.f) / *p;
+    if (*P > 1.f) {
+	alfa = (*P - 1.f) / *P;
     }
 /*<       C = 2.*PI/(1.-1./EXP(PI*SQRT(ALFA))) + 4.**ALFA/ALFA >*/
     c__ = pi * 2.f / (1.f - 1.f / exp(pi * sqrt(alfa))) + R_pow(&c_b8, &alfa)
 	     / alfa;
 /*<       W = dLOG(C/EPS) >*/
-    w = log(c__ / *eps);
+    w = log(c__ / *EPS);
 /*<       W1 = 1./(PI*PI*ALFA)*W*W >*/
     w1 = 1.f / (pi * pi * alfa) * w * w;
 /*<       N = INT(W1) >*/
@@ -375,7 +385,7 @@ L10:
 /*<       SR = SQRT(ALFA*FLOAT(N)) >*/
     sr = sqrt(alfa * (real) n);
 /*<       IF (N1.LE.M) GO TO 20 >*/
-    if (n1 <= *m) {
+    if (n1 <= *M) {
 	goto L20;
     }
 
@@ -385,24 +395,24 @@ L10:
 /*<       N1 = 1 >*/
     n1 = 1;
 /*<       N = INT(FLOAT((M-1)/2)) >*/
-    n = (integer) ((real) ((*m - 1) / 2));
+    n = (integer) ((real) ((*M - 1) / 2));
 /*<       SR = SQRT(ALFA*FLOAT(N)) >*/
     sr = sqrt(alfa * (real) n);
 /*<       M = 2*N + 1 >*/
-    *m = (n << 1) + 1;
+    *M = (n << 1) + 1;
 /*<       EPS = C/EXP(PI*SR) >*/
-    *eps = c__ / exp(pi * sr);
+    *EPS = c__ / exp(pi * sr);
 /*<       GO TO 30 >*/
     goto L30;
 
 /*<    20 M = N1 >*/
 L20:
-    *m = n1;
+    *M = n1;
 /*<       N1 = 0 >*/
     n1 = 0;
 /*<    30 H = 2.*D/SR >*/
 L30:
-    h__ = *d__ * 2.f / sr;
+    h__ = *D__ * 2.f / sr;
 /*<       SUM2 = 0. >*/
     sum2 = 0.f;
 /*<       L1 = N >*/
@@ -426,15 +436,15 @@ L40:
 /*<       H0 = 1. >*/
     h0 = 1.f;
 /*<       EPS3 = EPS/3. >*/
-    eps3 = *eps / 3.f;
+    eps3 = *EPS / 3.f;
 /*<       SR = SQRT(EPS) >*/
-    sr = sqrt(*eps);
+    sr = sqrt(*EPS);
 /*<       V1 = EPS*10. >*/
-    v1 = *eps * 10.f;
+    v1 = *EPS * 10.f;
 /*<       V2 = V1 >*/
     v2 = v1;
 /*<       M1 = M - 1 >*/
-    m1 = *m - 1;
+    m1 = *M - 1;
 /*<       N = INT(FLOAT(M1/2)) >*/
     n = (integer) ((real) (m1 / 2));
 /*<       M2 = N >*/
@@ -452,39 +462,63 @@ L40:
 L50:
     i__ = 0;
 /*<       IF (INF.EQ.1) SUM = F(0.d0) >*/
-    if (*inf == 1) {
+    if (*INF == 1) {
       /*	sum = (*f)(&c_b12);*/
     zz[0]=c_b12;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    sum=tmp[0];
+      
+      state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+      REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+      Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+      Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+      Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+      
+    sum=REAL(tmp)[0];
+    Rf_unprotect(4);
     }
 /*<       IF (INF.EQ.2) SUM = F(A+1.) >*/
-    if (*inf == 2) {
-	d__1 = *a + 1.f;
+    if (*INF == 2) {
+	d__1 = *A + 1.f;
 	/*	sum = (*f)(&d__1);*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    sum=tmp[0];
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+	REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+	Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+	Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+	Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+	
+    sum=REAL(tmp)[0];
+    Rf_unprotect(4);
     }
 /*<       IF (INF.EQ.3) SUM = F(A+dLOG(1.+SQ2))/SQ2 >*/
-    if (*inf == 3) {
-	d__1 = *a + log(sq2 + 1.f);
+    if (*INF == 3) {
+	d__1 = *A + log(sq2 + 1.f);
 	/*	sum = (*f)(&d__1) / sq2;*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    sum=tmp[0]/sq2;
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+	REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+	Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+	Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+	Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+	
+    sum=REAL(tmp)[0]/sq2;
+    Rf_unprotect(4);
     }
 /*<       IF (INF.EQ.4) SUM = F((A+B)/2.)/4.*BA >*/
-    if (*inf == 4) {
-	d__1 = (*a + *b) / 2.f;
+    if (*INF == 4) {
+	d__1 = (*A + *B) / 2.f;
 	/*	sum = (*f)(&d__1) / 4.f * ba;*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    sum=tmp[0] / 4.f * ba;
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+	REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+	Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+	Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+	Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+	
+    sum=REAL(tmp)[0] / 4.f * ba;
+    Rf_unprotect(4);
     }
 
 /*     COMPUTE WEIGHTS, NODES AND FUNCTION VALUES */
@@ -517,9 +551,15 @@ L70:
 L80:
     /*    v = (*f)(&h1);*/
     zz[0]=h1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    v=tmp[0];
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+    REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+    Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+    Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+    Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+    
+    v=REAL(tmp)[0];
+    Rf_unprotect(4);
 /*<       H1 = H1 + H >*/
     h1 += h__;
 /*<       GO TO 150 >*/
@@ -527,12 +567,18 @@ L80:
 
 /*<    90 V = E1*F(A+E1) >*/
 L90:
-    d__1 = *a + e1;
+    d__1 = *A + e1;
     /*    v = e1 * (*f)(&d__1);*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    v=e1 * tmp[0];
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+    REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+    Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+    Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+    Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+    
+    v=e1 * REAL(tmp)[0];
+    Rf_unprotect(4);
 /*<       E1 = E1*EXPH >*/
     e1 *= exph;
 /*<       GO TO 150 >*/
@@ -540,7 +586,7 @@ L90:
 
 /*<   100 IF (INF.EQ.4) GO TO 140 >*/
 L100:
-    if (*inf == 4) {
+    if (*INF == 4) {
 	goto L140;
     }
 /*<       W1 = SQRT(E1+1./E1) >*/
@@ -587,12 +633,18 @@ L120:
     goto L120;
 /*<   130 V = W2/W1*F(A+S) >*/
 L130:
-    d__1 = *a + s;
+    d__1 = *A + s;
     /*    v = w2 / w1 * (*f)(&d__1);*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    v = w2 / w1 * tmp[0];
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+    REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+    Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+    Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+    Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+    
+    v = w2 / w1 * REAL(tmp)[0];
+    Rf_unprotect(4);
 /*<       E1 = E1*EXPH >*/
     e1 *= exph;
 /*<       GO TO 150 >*/
@@ -602,12 +654,18 @@ L130:
 L140:
     w1 = e1 + 1.f;
 /*<       V = E1/W1/W1*F((A+B*E1)/W1)*BA >*/
-    d__1 = (*a + *b * e1) / w1;
+    d__1 = (*A + *B * e1) / w1;
     /*    v = e1 / w1 / w1 * (*f)(&d__1) * ba;*/
     zz[0]=d__1;
-    call_R(f, 1L, args, mode, length, 0L, 1L, ss);
-    tmp=(double *)ss[0];
-    v = e1 / w1 / w1 * tmp[0] * ba;
+    
+    state2 = Rf_protect(Rf_allocVector(REALSXP, 1)); /*.C -> .Call requires this*/
+    REAL(state2)[0] = zz[0];                                   /*.C -> .Call requires this*/
+    Rf_protect(call2=Rf_lang2(f, state2));        /*.C -> .Call requires this*/
+    Rf_protect(result2=Rf_eval(call2, envir));     /*.C -> .Call requires this*/
+    Rf_protect(tmp=Rf_coerceVector(result2, REALSXP));/*.C -> .Call requires this*/    
+    
+    v = e1 / w1 / w1 * REAL(tmp)[0] * ba;
+    Rf_unprotect(4);
 /*<       E1 = E1*EXPH >*/
     e1 *= exph;
 
@@ -705,7 +763,7 @@ L200:
 	l = i__;
     }
 /*<       V1 = 10.*EPS >*/
-    v1 = *eps * 10.f;
+    v1 = *EPS * 10.f;
 /*<       V2 = V1 >*/
     v2 = v1;
 /*<       M2 = M1 - L >*/
@@ -758,7 +816,7 @@ L200:
 
 /*<   210 IF (P.GE.1.) GO TO 220 >*/
 L210:
-    if (*p >= 1.f) {
+    if (*P >= 1.f) {
 	goto L220;
     }
 
@@ -806,78 +864,102 @@ L210:
     goto L60;
 
 /*     FINAL RESULTS */
-
+Rf_protect(ans = Rf_allocVector(REALSXP, 1));
 /*<   220 QUADR = -H*(SUM1+COR+SUM) >*/
 L220:
     *quadr = -h__ * (sum1 + cor + sum);
 /*<       INF = N1 >*/
-    *inf = n1;
+    *INF = n1;
 /*<       RETURN >*/
-    return 0;
+    REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    return ans;// return 0;
 
 /*<   230 QUADR = W1 >*/
 L230:
     *quadr = w1;
 /*<       INF = 2 >*/
-    *inf = 2;
+    *INF = 2;
 /*<       M = M2 + 1 >*/
-    *m = m2 + 1;
+    *M = m2 + 1;
 /*<       RETURN >*/
-    return 0;
+    REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    return ans;// return 0;
 
 /*<   240 QUADR = SUM2 >*/
 L240:
     *quadr = sum2;
 /*<       INF = 3 >*/
-    *inf = 3;
+    *INF = 3;
 /*<       M = K + L + 1 >*/
-    *m = k + l + 1;
+    *M = k + l + 1;
 /*<       RETURN >*/
-    return 0;
+    REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    return ans;// return 0;
 
 /*<   250 QUADR = W1 >*/
 L250:
     *quadr = w1;
 /*<       INF = 3 >*/
-    *inf = 3;
+    *INF = 3;
 /*<       M = M2/2 + 1 >*/
-    *m = m2 / 2 + 1;
+    *M = m2 / 2 + 1;
 /*<       RETURN >*/
-    return 0;
+    REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 3 -- integration incomplete - try larger max");
+    return ans;// return 0;
 
 /*<   260 QUADR = U + COR + SUM >*/
 L260:
     *quadr = u + cor + sum;
 /*<       INF = 4 >*/
-    *inf = 4;
+    *INF = 4;
 /*<       M = K + L + 1 >*/
-    *m = k + l + 1;
+    *M = k + l + 1;
 /*<       RETURN >*/
-    return 0;
+    REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 4 -- integration incomplete - try larger max");
+    return ans;// return 0;
 
 /*<   270 INF = 10 >*/
 L270:
-    *inf = 10;
+    *INF = 10;
 /*<       RETURN >*/
-    return 0;
+    //REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 10 -- incorrect arguments");
+    return ans;// return 0;
 
 /*<   280 INF = 11 >*/
 L280:
-    *inf = 11;
+    *INF = 11;
 /*<       RETURN >*/
-    return 0;
+    //REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 11 -- incorrect arguments");
+    return ans;// return 0;
 
 /*<   290 INF = 12 >*/
 L290:
-    *inf = 12;
+    *INF = 12;
 /*<       RETURN >*/
-    return 0;
+    //REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 12 -- incorrect arguments");
+    return ans;// return 0;
 
 /*<   300 INF = 13 >*/
 L300:
-    *inf = 13;
+    *INF = 13;
 /*<       RETURN >*/
-    return 0;
+    //REAL(ans)[0] = quadr[0]; 
+    Rf_unprotect(1); 
+    Rf_error("INF in toms614_sexp.c is 13 -- incorrect arguments");
+    return ans;// return 0;
 
 /*<       END >*/
 } /* inthp_ */

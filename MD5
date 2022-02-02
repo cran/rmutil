@@ -1,13 +1,13 @@
-5736e266fbf1c5367b5ee924e4371d53 *DESCRIPTION
+46fa487b90bc80845ec3c5026b2d62d1 *DESCRIPTION
 29cd42a85b992bbc8211a7ff776f231f *NAMESPACE
-9f629c9c94c2a5f1e318baaa88b025b3 *NEWS.md
+7a10f2271c144f506d5c4bed2fa66bfb *NEWS.md
 ef0aa598b93ec9ec9a1a052b1369772f *R/contrast.r
 3701eac8a5cfcacc7d9d07455d64a8c3 *R/diffeqn.r
 03a46a75c9e75b0725f07789e4f37d2a *R/dist.r
 bc5775ade6402b2ef8d00951a4891d69 *R/finterp.r
 0e8c28235c9ef20c9bb436f335635b6f *R/gettvc.r
 b28fe0b04d36b9f80d76fce6565c39d4 *R/ghermite.r
-46ff5d37076a7c501807fafdffa36765 *R/int.r
+f5e5f0c508a590098604a70d9ddc89fa *R/int.r
 c48a2502eb9f851d7c0c247ca781f94b *R/objectrm.r
 645933ae72f085ae09623eba272e62ad *R/pkpd.r
 6c634198c7ff53bf3c4a428454a6c697 *R/plotrm.r
@@ -48,7 +48,7 @@ b301950db34aebc8705ae6ed06c5f43f *man/dftorep.Rd
 d5260eca7a7b41007171b24517b3d742 *man/fnenvir.Rd
 adfb7c5c5afc798ea6008d674f757589 *man/gauss.hermite.Rd
 68d0db61802561c2bdaa68e58ce0c5f8 *man/gettvc.Rd
-9265fbdf8e1a77cb3ac02c23874837d5 *man/int.Rd
+fe3b7322712b42df71192c9de0461ece *man/int.Rd
 4de5a4648325254b18ddc61b8927eefb *man/int2.Rd
 bc25ba1d110254a22487e22d7ed0755b *man/iprofile.Rd
 802e62144b1453f60af7a49fc39ed54f *man/lin.diff.eqn.Rd
@@ -73,6 +73,6 @@ db3b7e8ef3c5997a10b38a4b721c3565 *man/tvctomat.Rd
 b4d06dab580c85ce4e030e06819caf1d *src/dist.h
 f56d0224192156daee67e1aa06c7ebf2 *src/f2c.h
 66f8bf15a55ad8e04f6072d45dc9a67f *src/gettvc.f
-66359d667e8cd4c50288b4c6727fba7b *src/rmutil_init.c
-289f91c8fc9f8aec02e4805fce6c537f *src/romberg.c
-32268be45146a26fa1efa320d5479db1 *src/toms614.c
+24cba2234a55f9b523b5e189c2c68ff3 *src/rmutil_init.c
+e51f001afc539f07c406c67b9f4c503f *src/romberg_sexp.c
+4634c4a1016cdca4d1bf41eb69603799 *src/toms614_sexp.c

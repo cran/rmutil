@@ -1,4 +1,22 @@
 ------------------------------------------------------------------------------
+version 1.1.7
+------------------------------------------------------------------------------
+
+  * added Author information of TOMS614/INTHP
+  * fixed void / SEXP registration issue (LTO / valgrind additional issues)
+  * fixed 0-sized array warning 
+  * Fixed call_R Issue https://github.com/swihart/rmutil/issues/11
+  * Updated links to https: where appropriate
+
+------------------------------------------------------------------------------
+version 1.1.6
+------------------------------------------------------------------------------
+
+  * Fixed call_R Issue https://github.com/swihart/rmutil/issues/11
+  * Updated links to https: where appropriate
+
+
+------------------------------------------------------------------------------
 version 1.1.5
 ------------------------------------------------------------------------------
 

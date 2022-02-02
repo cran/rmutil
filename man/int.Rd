@@ -58,5 +58,9 @@ f <- function(x) exp(-(x-2)^2/2)/sqrt(2*pi)
 int(f, a=0:3)
 int(f, a=0:3, d=2)
 1-pnorm(0:3, 2)
+#
+f <- function(x) dnorm(x)
+int(f, a=-Inf, b=qnorm(0.975))
+int(f, a=-Inf, b=qnorm(0.975), type="TOMS614", max=1e2)
 }
 \keyword{math}
