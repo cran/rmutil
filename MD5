@@ -1,6 +1,6 @@
-46fa487b90bc80845ec3c5026b2d62d1 *DESCRIPTION
+178b2d080fc0ea6448bab8608466dc12 *DESCRIPTION
 29cd42a85b992bbc8211a7ff776f231f *NAMESPACE
-7a10f2271c144f506d5c4bed2fa66bfb *NEWS.md
+49f81682706a44ffe2cacb52de567ca1 *NEWS.md
 ef0aa598b93ec9ec9a1a052b1369772f *R/contrast.r
 3701eac8a5cfcacc7d9d07455d64a8c3 *R/diffeqn.r
 03a46a75c9e75b0725f07789e4f37d2a *R/dist.r
@@ -74,5 +74,5 @@ b4d06dab580c85ce4e030e06819caf1d *src/dist.h
 f56d0224192156daee67e1aa06c7ebf2 *src/f2c.h
 66f8bf15a55ad8e04f6072d45dc9a67f *src/gettvc.f
 24cba2234a55f9b523b5e189c2c68ff3 *src/rmutil_init.c
-e51f001afc539f07c406c67b9f4c503f *src/romberg_sexp.c
+b659606ccdaf16303fa5af5fb363eca9 *src/romberg_sexp.c
 4634c4a1016cdca4d1bf41eb69603799 *src/toms614_sexp.c

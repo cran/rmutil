@@ -144,7 +144,7 @@ SEXP romberg_sexp(SEXP fcn, SEXP a, SEXP b, SEXP len, SEXP eps,
 
 
   /*allocate vectors according to member of points and length of vector*/
-  tab1 = (double*)R_alloc((size_t)(*PTS)         ,sizeof(char *));
+  tab1 = (double*)R_alloc((size_t)(*PTS)         ,sizeof(double));
   tab2 = (double*)R_alloc((size_t)(*PTS)         ,sizeof(double));
   x = (double*)R_alloc((size_t)(*MAX*(*LEN+1)),sizeof(double));
   fx = (double*)R_alloc((size_t)(*MAX*(*LEN+1)),sizeof(double));
