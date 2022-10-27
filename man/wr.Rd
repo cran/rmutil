@@ -1,5 +1,5 @@
 \name{wr}
-\title{Find the Response Vector and Design Matrix for a W\&R Model Formula}
+\title{Find the Response Vector and Design Matrix for a W&R Model Formula}
 \alias{wr}
 \usage{
 wr(formula, data=NULL, expand=TRUE)

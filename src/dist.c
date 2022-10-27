@@ -243,7 +243,7 @@ static void interp(double x[], double fx[], int pts, double tab1[],
     *df=2*ni<(pts-j-3)?tab1[ni+1]:tab2[ni--];
     *f+=*df;}}
 
-static void evalfn(void fcn(), double a[], double b[], int n,
+static void evalfn(void (*fcn)(double*, double*, double*, double*, int, double*), double a[], double b[], int n,
 		   int len, double sum[], double tmpsum[], double zz[],
 		   double pnt1[], double pnt2[], double arg1[],
 		   double arg2[], double arg3[], double x[])
@@ -275,7 +275,7 @@ static void evalfn(void fcn(), double a[], double b[], int n,
     for(k=0;k<len;k++)sum[k]=(sum[k]+(b[k]-a[k])*tmpsum[k]/nn)/3.0;
     return;}}
 
-static void romberg2(void fcn(), double *a, double *b, int len,
+static void romberg2(void (*fcn)(double*, double*, double*, double*, int, double*), double *a, double *b, int len,
 		    double *arg1, double *arg2, double *arg3, double eps,
 		    int pts, int max, int *err, double sumlen[])
 {

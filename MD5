@@ -1,6 +1,6 @@
-a658b85115e81961e8bd0890b2a49a1a *DESCRIPTION
+626aa956601a298ac539661ddfba7df0 *DESCRIPTION
 29cd42a85b992bbc8211a7ff776f231f *NAMESPACE
-49f81682706a44ffe2cacb52de567ca1 *NEWS.md
+95738fdcd34080be534c77496fd75d51 *NEWS.md
 ef0aa598b93ec9ec9a1a052b1369772f *R/contrast.r
 3701eac8a5cfcacc7d9d07455d64a8c3 *R/diffeqn.r
 03a46a75c9e75b0725f07789e4f37d2a *R/dist.r
@@ -67,11 +67,11 @@ d1cb160e2c6001e26cbefcff34cc4b47 *man/rmna.Rd
 41901cbbe92a49fe542c09aad1e530db *man/runge.kutta.Rd
 a6b3deb9ea94d3abb128c82c9df3cbce *man/tcctomat.Rd
 db3b7e8ef3c5997a10b38a4b721c3565 *man/tvctomat.Rd
-3b3106c6e547062237134de1f740b692 *man/wr.Rd
+33e7e106c1133e7f66e0007bb02fc3ee *man/wr.Rd
 56be3da0a27ad554ac2b456af1cd58c9 *src/cutil.c
-15ac46f9eb7808b19180ad5ece8f2991 *src/dist.c
+1de3197f5a6a93fceadcafb3bd634cfa *src/dist.c
 b4d06dab580c85ce4e030e06819caf1d *src/dist.h
-f56d0224192156daee67e1aa06c7ebf2 *src/f2c.h
+20c5a2a4df22ac6d34eccc1436dddb6f *src/f2c.h
 66f8bf15a55ad8e04f6072d45dc9a67f *src/gettvc.f
 24cba2234a55f9b523b5e189c2c68ff3 *src/rmutil_init.c
 b659606ccdaf16303fa5af5fb363eca9 *src/romberg_sexp.c
